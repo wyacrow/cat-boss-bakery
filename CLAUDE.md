@@ -22,6 +22,45 @@ Always consult these docs before implementing any game system — they are the a
 - **Renderer**: D3D12 (Windows) / Forward+
 - **Physics**: Jolt Physics (3D)
 - **Stretch mode**: `canvas_items` with `expand` aspect — UI is designed to scale.
+- **Target resolution**: **600×1100** (竖屏手机比例)
+
+---
+
+##  UI Layout Rules (CRITICAL - 从错误中学习)
+
+> **错误清单**（按发生顺序）：
+> 1. 假设分辨率是 1080×1920，实际是 600×1100
+> 2. 用锚点定位做垂直布局，应该用 VBoxContainer
+> 3. 没有检查 project.godot 的窗口尺寸设置
+> 4. 锚点和 offset 混用，导致子节点超出父容器
+> 5. 尝试给容器节点直接设置 size（容器大小是自动计算的）
+> 6. **ColorRect/TextureRect 子节点未设置锚点，导致大小为 0 无法显示**
+>
+> **根本原因**：假设多于确认，没有先检查基础参数就开始写代码
+>
+> **正确流程**：
+> 1. 检查 `project.godot` → 确认窗口尺寸
+> 2. 确认布局方向 → 垂直用 VBoxContainer，水平用 HBoxContainer
+> 3. 确认比例关系 → 各区域的大小比例
+> 4. 最后才写代码
+>
+> **Godot 布局系统规则**：
+> - 容器节点（Container）的大小由子节点自动计算，**不能手动设置**
+> - 锚点（anchor）和偏移（offset）**不要混用**，选一种即可
+> - **Control 子节点（ColorRect/TextureRect）必须设置锚点才能正确显示**：
+>   - `layout_mode = 1` (Use Anchor)
+>   - `anchors_preset = 15` (Full Rect)
+>   - `anchor_right = 1.0`, `anchor_bottom = 1.0`
+>   - `grow_horizontal = 2`, `grow_vertical = 2`
+> - 动手前必须先问清楚：分辨率？方向？比例？
+
+### 本项目布局参数
+
+- 目标分辨率：**600×1100** (宽×高，竖屏手机) — 已设置于 `project.godot`
+- 主布局容器：`VBoxContainer` (垂直排列)
+- 三区比例：A:B:C = **2.5 : 5 : 1.8**
+
+---
 
 ## Architecture
 
@@ -91,9 +130,10 @@ Example file naming:
 # 🧠 4. DATA HANDLING RULES
 
 ## Grid
-- Must use `Array[6][6]`
-- **NO node-per-cell design** — data-driven only
-- Store only data (`Item` or `null`)
+- Must use `Array[6][6]` for data storage
+- **V1 原型阶段：预创建 36 个 Button 节点**，便于快速验证美术效果和交互
+- 每个格子是一个 Button，支持按下/弹起动画
+- Store only data (`Item` or `null`) in the array
 
 ## Inventory
 - Must use `Dictionary`

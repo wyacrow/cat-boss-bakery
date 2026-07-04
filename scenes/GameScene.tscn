@@ -1,0 +1,292 @@
+[gd_scene format=3 uid="uid://cbuwk2ga8wnfq"]
+
+[ext_resource type="Script" uid="uid://dilhdh8r8jqdc" path="res://scripts/core/GameScene.gd" id="1_scene"]
+
+
+[ext_resource type="Script" uid="uid://dw1xfuslxs4kn" path="res://scripts/ui/components/item_cell_button.gd" id="2_cell_button"]
+[ext_resource type="PackedScene" path="res://scenes/ui/cell_button.tscn" id="3_cell_scene"]
+[ext_resource type="Script" path="res://scripts/systems/GridBoard.gd" id="4_grid_board"]
+
+[node name="GameScene" type="Control" unique_id=1372440440]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_scene")
+cell_button_size = Vector2(85, 85)
+
+[node name="MainVBox" type="VBoxContainer" parent="." unique_id=1816066223]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 0
+alignment = 1
+
+[node name="AreaA_Top" type="Control" parent="MainVBox" unique_id=1604444252]
+custom_minimum_size = Vector2(0, 290)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Background" type="ColorRect" parent="MainVBox/AreaA_Top" unique_id=796988307]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.15, 0.25, 0.45, 1)
+
+[node name="TopHUDBar" type="Control" parent="MainVBox/AreaA_Top" unique_id=2010890645]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -400.0
+offset_top = 16.0
+offset_right = -16.0
+offset_bottom = 232.0
+grow_horizontal = 0
+
+[node name="HUDContainer" type="HBoxContainer" parent="MainVBox/AreaA_Top/TopHUDBar" unique_id=1319817279]
+layout_mode = 0
+theme_override_constants/separation = 16
+alignment = 2
+
+[node name="StaminaBar" type="ColorRect" parent="MainVBox/AreaA_Top/TopHUDBar/HUDContainer" unique_id=621885764]
+custom_minimum_size = Vector2(160, 48)
+layout_mode = 2
+color = Color(0.2, 0.8, 0.9, 1)
+
+[node name="GoldDisplay" type="ColorRect" parent="MainVBox/AreaA_Top/TopHUDBar/HUDContainer" unique_id=1915836777]
+custom_minimum_size = Vector2(120, 48)
+layout_mode = 2
+color = Color(0.95, 0.85, 0.2, 1)
+
+[node name="SettingsButton" type="ColorRect" parent="MainVBox/AreaA_Top/TopHUDBar/HUDContainer" unique_id=2041735772]
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 2
+color = Color(0.3, 0.3, 0.9, 1)
+
+[node name="OrderBar" type="Control" parent="MainVBox/AreaA_Top" unique_id=518133272]
+layout_mode = 1
+anchor_top = 0.72
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 2.0
+offset_top = -55.12001
+offset_right = 2.0
+offset_bottom = -8.794983
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Background" type="ColorRect" parent="MainVBox/AreaA_Top/OrderBar" unique_id=1822038681]
+layout_mode = 0
+color = Color(0.4, 0.25, 0.15, 1)
+
+[node name="OrderSlot_1" type="ColorRect" parent="MainVBox/AreaA_Top/OrderBar" unique_id=455189241]
+layout_mode = 0
+offset_left = 16.0
+offset_top = 16.0
+offset_right = 136.0
+offset_bottom = 116.0
+color = Color(0.95, 0.6, 0.2, 1)
+
+[node name="OrderSlot_2" type="ColorRect" parent="MainVBox/AreaA_Top/OrderBar" unique_id=1786608886]
+layout_mode = 0
+offset_left = 152.0
+offset_top = 16.0
+offset_right = 272.0
+offset_bottom = 116.0
+color = Color(0.95, 0.6, 0.2, 1)
+
+[node name="OrderSlot_3" type="ColorRect" parent="MainVBox/AreaA_Top/OrderBar" unique_id=99080164]
+layout_mode = 0
+offset_left = 288.0
+offset_top = 16.0
+offset_right = 408.0
+offset_bottom = 116.0
+color = Color(0.95, 0.6, 0.2, 1)
+
+[node name="AreaB_Grid" type="Control" parent="MainVBox" unique_id=718818957]
+custom_minimum_size = Vector2(0, 610)
+layout_mode = 2
+
+[node name="Background" type="ColorRect" parent="MainVBox/AreaB_Grid" unique_id=175982042]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.84762645, 0.7955881, 0.7480313, 1)
+
+[node name="GridBoard" type="PanelContainer" parent="MainVBox/AreaB_Grid" unique_id=108032487]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_bottom = 9.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("4_grid_board")
+
+[node name="GridContainer" type="GridContainer" parent="MainVBox/AreaB_Grid/GridBoard" unique_id=1019199615]
+propagate_maximum_size = false
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_constants/h_separation = 14
+theme_override_constants/v_separation = 14
+columns = 6
+
+[node name="Cell_0_0" instance=ExtResource("3_cell_scene") parent="MainVBox/AreaB_Grid/GridBoard/GridContainer"]
+unique_name_in_owner = true
+
+[node name="Cell_0_1" instance=ExtResource("3_cell_scene") parent="MainVBox/AreaB_Grid/GridBoard/GridContainer"]
+unique_name_in_owner = true
+
+[node name="Cell_0_2" instance=ExtResource("3_cell_scene") parent="MainVBox/AreaB_Grid/GridBoard/GridContainer"]
+unique_name_in_owner = true
+
+[node name="Cell_0_3" instance=ExtResource("3_cell_scene") parent="MainVBox/AreaB_Grid/GridBoard/GridContainer"]
+unique_name_in_owner = true
+
+[node name="Cell_0_4" instance=ExtResource("3_cell_scene") parent="MainVBox/AreaB_Grid/GridBoard/GridContainer"]
+unique_name_in_owner = true
+
+[node name="Cell_0_5" instance=ExtResource("3_cell_scene") parent="MainVBox/AreaB_Grid/GridBoard/GridContainer"]
+unique_name_in_owner = true
+
+[node name="Cell_1_0" instance=ExtResource("3_cell_scene") parent="MainVBox/AreaB_Grid/GridBoard/GridContainer"]
+unique_name_in_owner = true
+
+[node name="Cell_1_1" instance=ExtResource("3_cell_scene") parent="MainVBox/AreaB_Grid/GridBoard/GridContainer"]
+unique_name_in_owner = true
+
+[node name="Cell_1_2" instance=ExtResource("3_cell_scene") parent="MainVBox/AreaB_Grid/GridBoard/GridContainer"]
+unique_name_in_owner = true
+
+[node name="Cell_1_3" instance=ExtResource("3_cell_scene") parent="MainVBox/AreaB_Grid/GridBoard/GridContainer"]
+unique_name_in_owner = true
+
+[node name="Cell_1_4" instance=ExtResource("3_cell_scene") parent="MainVBox/AreaB_Grid/GridBoard/GridContainer"]
+unique_name_in_owner = true
+
+[node name="Cell_1_5" instance=ExtResource("3_cell_scene") parent="MainVBox/AreaB_Grid/GridBoard/GridContainer"]
+unique_name_in_owner = true
+
+[node name="Cell_2_0" instance=ExtResource("3_cell_scene") parent="MainVBox/AreaB_Grid/GridBoard/GridContainer"]
+unique_name_in_owner = true
+
+[node name="Cell_2_1" instance=ExtResource("3_cell_scene") parent="MainVBox/AreaB_Grid/GridBoard/GridContainer"]
+unique_name_in_owner = true
+
+[node name="Cell_2_2" instance=ExtResource("3_cell_scene") parent="MainVBox/AreaB_Grid/GridBoard/GridContainer"]
+unique_name_in_owner = true
+
+[node name="Cell_2_3" instance=ExtResource("3_cell_scene") parent="MainVBox/AreaB_Grid/GridBoard/GridContainer"]
+unique_name_in_owner = true
+
+[node name="Cell_2_4" instance=ExtResource("3_cell_scene") parent="MainVBox/AreaB_Grid/GridBoard/GridContainer"]
+unique_name_in_owner = true
+
+[node name="Cell_2_5" instance=ExtResource("3_cell_scene") parent="MainVBox/AreaB_Grid/GridBoard/GridContainer"]
+unique_name_in_owner = true
+
+[node name="Cell_3_0" instance=ExtResource("3_cell_scene") parent="MainVBox/AreaB_Grid/GridBoard/GridContainer"]
+unique_name_in_owner = true
+
+[node name="Cell_3_1" instance=ExtResource("3_cell_scene") parent="MainVBox/AreaB_Grid/GridBoard/GridContainer"]
+unique_name_in_owner = true
+
+[node name="Cell_3_2" instance=ExtResource("3_cell_scene") parent="MainVBox/AreaB_Grid/GridBoard/GridContainer"]
+unique_name_in_owner = true
+
+[node name="Cell_3_3" instance=ExtResource("3_cell_scene") parent="MainVBox/AreaB_Grid/GridBoard/GridContainer"]
+unique_name_in_owner = true
+
+[node name="Cell_3_4" instance=ExtResource("3_cell_scene") parent="MainVBox/AreaB_Grid/GridBoard/GridContainer"]
+unique_name_in_owner = true
+
+[node name="Cell_3_5" instance=ExtResource("3_cell_scene") parent="MainVBox/AreaB_Grid/GridBoard/GridContainer"]
+unique_name_in_owner = true
+
+[node name="Cell_4_0" instance=ExtResource("3_cell_scene") parent="MainVBox/AreaB_Grid/GridBoard/GridContainer"]
+unique_name_in_owner = true
+
+[node name="Cell_4_1" instance=ExtResource("3_cell_scene") parent="MainVBox/AreaB_Grid/GridBoard/GridContainer"]
+unique_name_in_owner = true
+
+[node name="Cell_4_2" instance=ExtResource("3_cell_scene") parent="MainVBox/AreaB_Grid/GridBoard/GridContainer"]
+unique_name_in_owner = true
+
+[node name="Cell_4_3" instance=ExtResource("3_cell_scene") parent="MainVBox/AreaB_Grid/GridBoard/GridContainer"]
+unique_name_in_owner = true
+
+[node name="Cell_4_4" instance=ExtResource("3_cell_scene") parent="MainVBox/AreaB_Grid/GridBoard/GridContainer"]
+unique_name_in_owner = true
+
+[node name="Cell_4_5" instance=ExtResource("3_cell_scene") parent="MainVBox/AreaB_Grid/GridBoard/GridContainer"]
+unique_name_in_owner = true
+
+[node name="Cell_5_0" instance=ExtResource("3_cell_scene") parent="MainVBox/AreaB_Grid/GridBoard/GridContainer"]
+unique_name_in_owner = true
+
+[node name="Cell_5_1" instance=ExtResource("3_cell_scene") parent="MainVBox/AreaB_Grid/GridBoard/GridContainer"]
+unique_name_in_owner = true
+
+[node name="Cell_5_2" instance=ExtResource("3_cell_scene") parent="MainVBox/AreaB_Grid/GridBoard/GridContainer"]
+unique_name_in_owner = true
+
+[node name="Cell_5_3" instance=ExtResource("3_cell_scene") parent="MainVBox/AreaB_Grid/GridBoard/GridContainer"]
+unique_name_in_owner = true
+
+[node name="Cell_5_4" instance=ExtResource("3_cell_scene") parent="MainVBox/AreaB_Grid/GridBoard/GridContainer"]
+unique_name_in_owner = true
+
+[node name="Cell_5_5" instance=ExtResource("3_cell_scene") parent="MainVBox/AreaB_Grid/GridBoard/GridContainer"]
+unique_name_in_owner = true[node name="AreaC_Bottom" type="Control" parent="MainVBox" unique_id=391821582]
+custom_minimum_size = Vector2(0, 200)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Background" type="ColorRect" parent="MainVBox/AreaC_Bottom" unique_id=1935573584]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.25, 0.2, 0.35, 1)
+
+[node name="BottomPanel" type="Control" parent="MainVBox/AreaC_Bottom" unique_id=2108442162]
+anchors_preset = 0
+offset_left = 50.0
+offset_top = 50.0
+offset_right = -50.0
+offset_bottom = -50.0
+
+[node name="ButtonContainer" type="HBoxContainer" parent="MainVBox/AreaC_Bottom/BottomPanel" unique_id=1102053023]
+layout_mode = 0
+theme_override_constants/separation = 16
+alignment = 1
+
+[node name="GeneratorButton" type="ColorRect" parent="MainVBox/AreaC_Bottom/BottomPanel/ButtonContainer" unique_id=456258645]
+custom_minimum_size = Vector2(80, 80)
+layout_mode = 2
+color = Color(0.6, 0.3, 0.8, 1)
+
+[node name="ItemInfoPanel" type="ColorRect" parent="MainVBox/AreaC_Bottom/BottomPanel/ButtonContainer" unique_id=1442837103]
+custom_minimum_size = Vector2(200, 80)
+layout_mode = 2
+color = Color(0.5, 0.5, 0.5, 1)
+
+[node name="AutoMergeToggle" type="ColorRect" parent="MainVBox/AreaC_Bottom/BottomPanel/ButtonContainer" unique_id=2053980844]
+custom_minimum_size = Vector2(60, 60)
+layout_mode = 2
+color = Color(0.85, 0.2, 0.3, 1)

@@ -1,0 +1,38 @@
+[gd_scene format=3 uid="uid://dummycell"]
+
+[ext_resource type="Script" uid="uid://dw1xfuslxs4kn" path="res://scripts/ui/components/item_cell_button.gd" id="1_script"]
+
+[node name="CellButton" type="Button" unique_id=116191647]
+custom_minimum_size = Vector2(85, 85)
+layout_mode = 2
+script = ExtResource("1_script")
+
+[node name="ItemIcon" type="TextureRect" parent="." unique_id=536632234]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(42.5, 42.5)
+expand_mode = 1
+
+[node name="SelectionFrame" type="ColorRect" parent="." unique_id=578862209]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+color = Color(1, 1, 0, 0.5)
+
+[node name="DragOverlay" type="ColorRect" parent="." unique_id=1352931379]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+color = Color(1, 1, 1, 0.5)

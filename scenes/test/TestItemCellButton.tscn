@@ -1,0 +1,254 @@
+[gd_scene format=3 uid="uid://b21o6c73umu0p"]
+
+[ext_resource type="Script" uid="uid://dw1xfuslxs4kn" path="res://scripts/ui/components/item_cell_button.gd" id="1_button"]
+[ext_resource type="Texture2D" uid="uid://hxss4h1rfgtj" path="res://cake.png" id="2_ygdhj"]
+[ext_resource type="Script" uid="uid://bnyfb6vlcj0gv" path="res://scripts/test/TestSetup.gd" id="3_setup"]
+
+[node name="TestScene" type="Control" unique_id=740686865]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("3_setup")
+
+[node name="TestContainer" type="VBoxContainer" parent="." unique_id=1486835109]
+layout_mode = 0
+theme_override_constants/separation = 20
+
+[node name="Title" type="Label" parent="TestContainer" unique_id=1410923343]
+layout_mode = 2
+text = "ItemCellButton 测试场景"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ButtonRow1" type="HBoxContainer" parent="TestContainer" unique_id=1375141292]
+layout_mode = 2
+theme_override_constants/separation = 16
+alignment = 1
+
+[node name="TestButton1" type="Button" parent="TestContainer/ButtonRow1" unique_id=56406248]
+custom_minimum_size = Vector2(120, 120)
+layout_mode = 2
+script = ExtResource("1_button")
+
+[node name="ItemIcon" type="TextureRect" parent="TestContainer/ButtonRow1/TestButton1" unique_id=1230901825]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(60, 60)
+expand_mode = 1
+
+[node name="SelectionFrame" type="ColorRect" parent="TestContainer/ButtonRow1/TestButton1" unique_id=692463583]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+color = Color(1, 1, 0, 0.5)
+
+[node name="DragOverlay" type="ColorRect" parent="TestContainer/ButtonRow1/TestButton1" unique_id=567916924]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+color = Color(1, 1, 1, 0.5)
+
+[node name="TestButton2" type="Button" parent="TestContainer/ButtonRow1" unique_id=1389486205]
+custom_minimum_size = Vector2(120, 120)
+layout_mode = 2
+script = ExtResource("1_button")
+
+[node name="ItemIcon" type="TextureRect" parent="TestContainer/ButtonRow1/TestButton2" unique_id=1663876623]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(60, 60)
+texture = ExtResource("2_ygdhj")
+expand_mode = 1
+
+[node name="SelectionFrame" type="ColorRect" parent="TestContainer/ButtonRow1/TestButton2" unique_id=80115700]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+color = Color(1, 1, 0, 0.5)
+
+[node name="DragOverlay" type="ColorRect" parent="TestContainer/ButtonRow1/TestButton2" unique_id=1169657823]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+
+[node name="TestButton3" type="Button" parent="TestContainer/ButtonRow1" unique_id=355952829]
+custom_minimum_size = Vector2(120, 120)
+layout_mode = 2
+script = ExtResource("1_button")
+
+[node name="ItemIcon" type="TextureRect" parent="TestContainer/ButtonRow1/TestButton3" unique_id=2082154673]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+expand_mode = 1
+
+[node name="SelectionFrame" type="ColorRect" parent="TestContainer/ButtonRow1/TestButton3" unique_id=74494381]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+color = Color(1, 1, 0, 0.5)
+
+[node name="DragOverlay" type="ColorRect" parent="TestContainer/ButtonRow1/TestButton3" unique_id=1247840214]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+color = Color(1, 1, 1, 0.5)
+
+[node name="ButtonRow2" type="HBoxContainer" parent="TestContainer" unique_id=472794552]
+layout_mode = 2
+theme_override_constants/separation = 16
+alignment = 1
+
+[node name="TestButton4" type="Button" parent="TestContainer/ButtonRow2" unique_id=300989730]
+custom_minimum_size = Vector2(120, 120)
+layout_mode = 2
+script = ExtResource("1_button")
+
+[node name="ItemIcon" type="TextureRect" parent="TestContainer/ButtonRow2/TestButton4" unique_id=210653964]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+expand_mode = 1
+
+[node name="SelectionFrame" type="ColorRect" parent="TestContainer/ButtonRow2/TestButton4" unique_id=16457130]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+color = Color(1, 1, 0, 0.5)
+
+[node name="DragOverlay" type="ColorRect" parent="TestContainer/ButtonRow2/TestButton4" unique_id=1356214156]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+color = Color(1, 1, 1, 0.5)
+
+[node name="TestButton5" type="Button" parent="TestContainer/ButtonRow2" unique_id=485381835]
+custom_minimum_size = Vector2(120, 120)
+layout_mode = 2
+script = ExtResource("1_button")
+
+[node name="ItemIcon" type="TextureRect" parent="TestContainer/ButtonRow2/TestButton5" unique_id=864167493]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+expand_mode = 1
+
+[node name="SelectionFrame" type="ColorRect" parent="TestContainer/ButtonRow2/TestButton5" unique_id=853441505]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+color = Color(1, 1, 0, 0.5)
+
+[node name="DragOverlay" type="ColorRect" parent="TestContainer/ButtonRow2/TestButton5" unique_id=1038066504]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+color = Color(1, 1, 1, 0.5)
+
+[node name="TestButton6" type="Button" parent="TestContainer/ButtonRow2" unique_id=1224478973]
+custom_minimum_size = Vector2(120, 120)
+layout_mode = 2
+script = ExtResource("1_button")
+
+[node name="ItemIcon" type="TextureRect" parent="TestContainer/ButtonRow2/TestButton6" unique_id=206825084]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+expand_mode = 1
+
+[node name="SelectionFrame" type="ColorRect" parent="TestContainer/ButtonRow2/TestButton6" unique_id=2070579869]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+color = Color(1, 1, 0, 0.5)
+
+[node name="DragOverlay" type="ColorRect" parent="TestContainer/ButtonRow2/TestButton6" unique_id=1166484255]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+color = Color(1, 1, 1, 0.5)
+
+[node name="InfoPanel" type="PanelContainer" parent="TestContainer" unique_id=1128620531]
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+
+[node name="InfoLabel" type="Label" parent="TestContainer/InfoPanel" unique_id=2116795799]
+layout_mode = 2
+text = "测试说明：
+1. 单击按钮 - 选中（黄色框在图标之上）
+2. 选中后再次点击 - 开始拖动
+3. 拖到目标位置释放 - 移动/合并
+4. 弹起 - 弹性震荡动画"
+horizontal_alignment = 1
+vertical_alignment = 1
