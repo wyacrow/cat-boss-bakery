@@ -1,0 +1,17 @@
+schema: spec-driven
+
+context: |
+    Tech stack: Godot 4.7, GDScript, D3D12 Forward+ renderer, Jolt Physics
+    Project: 《猫老板的面包店》(Cat Boss's Bakery) — casual merge-2 + simulation management + cat raising game
+    Architecture: Event-driven with EventBus Autoload, 8 separated game systems, one-way data flow (Generator → Grid → Merge → Collect → Inventory → Order)
+    Conventions: snake_case functions/variables, RefCounted for data classes, Array[6][6] for grid, Dictionary for inventory
+
+# Per-artifact rules (optional)
+# Add custom rules for specific artifacts.
+# Example:
+#   rules:
+#     proposal:
+#       - Keep proposals under 500 words
+#       - Always include a "Non-goals" section
+#     tasks:
+#       - Break tasks into chunks of max 2 hours

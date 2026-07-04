@@ -1,0 +1,29 @@
+# Godot 4+ specific ignores
+.godot/
+.android/
+
+# Godot-specific
+*.import
+*.translation
+export_presets.cfg
+
+# Windows
+Thumbs.db
+[Dd]esktop.ini
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+ Icon
+
+# Linux
+*~
+.directory
+
+# Project-specific (temporary/test files)
+test.gd
+test.gd.uid
+
+# OpenSpec
+.openspec/
