@@ -26,11 +26,11 @@ func _ready() -> void:
 
 	randomize()  # 初始化随机种子，确保每次运行结果不同
 	print("GameScene loaded - wiring systems...")
+	AudioManager.play_bgm("bakery_cat_room_loop")
 	_apply_cell_button_size()
 	_wire_stamina_and_generator()
 	_wire_order_system()
 	_wire_effects_system()
-	_wire_order_progress()
 	_wire_hud()
 	_setup_skill_system()
 
@@ -43,7 +43,7 @@ func _wire_hud() -> void:
 	var gold_bar = get_node_or_null("MainVBox/AreaA_Top/TopHUDBar/HUDContainer/GoldDisplay")
 
 	if stamina_bar:
-		var label := stamina_bar.get_node_or_null("CurrencyContainer/Txt") as Label
+		var label := stamina_bar.get_node_or_null("Txt") as Label
 		var stamina_sys := _find_stamina_system()
 		if label and stamina_sys:
 			label.text = "%d/%d" % [stamina_sys.get_stamina(), stamina_sys.get_max_stamina()]
@@ -52,7 +52,7 @@ func _wire_hud() -> void:
 			print("GameScene: StaminaBar bound")
 
 	if gold_bar:
-		var label := gold_bar.get_node_or_null("CurrencyContainer/Txt") as Label
+		var label := gold_bar.get_node_or_null("Txt") as Label
 		if label:
 			_last_displayed_gold = GameStat.get_gold()
 			label.text = str(_last_displayed_gold)
@@ -108,21 +108,7 @@ func _wire_order_system() -> void:
 	order_bar.setup(order_sys)
 	print("GameScene: OrderBarManager setup complete")
 
-func _wire_order_progress() -> void:
-	var order_bar := $MainVBox/AreaA_Top/OrderBar
-	var progress_bar := preload("res://scenes/ui/order_progress_bar.tscn").instantiate()
-	progress_bar.name = "OrderProgressBar"
-	progress_bar.anchor_top = 0.0
-	progress_bar.anchor_bottom = 0.2
-	progress_bar.anchor_left = 0.0
-	progress_bar.anchor_right = 0.0
-	progress_bar.offset_left = 20.0
-	progress_bar.offset_right = 280.0
-	progress_bar.offset_top = 20.0
-	progress_bar.offset_bottom = 0.0
-	order_bar.add_child(progress_bar)
-	progress_bar.set_initial(GameStat.max_orders_target, GameStat.orders_completed)
-	print("GameScene: OrderProgressBar wired, target=%d" % GameStat.max_orders_target)
+# OrderProgressBar 已直接在场景中，通过自身 _ready() 从 GameStat 自初始化
 
 
 func _wire_effects_system() -> void:
@@ -130,7 +116,7 @@ func _wire_effects_system() -> void:
 	var gold_display := get_node_or_null("MainVBox/AreaA_Top/TopHUDBar/HUDContainer/GoldDisplay")
 	var gold_label: Label = null
 	if gold_display:
-		gold_label = gold_display.get_node_or_null("CurrencyContainer/Txt") as Label
+		gold_label = gold_display.get_node_or_null("Txt") as Label
 	var order_bar := get_node_or_null("MainVBox/AreaA_Top/OrderBar")
 	effects.setup(_get_grid_board(), gold_display, gold_label, order_bar)
 	_get_grid_board().set_effects_system(effects)
@@ -339,7 +325,7 @@ func _execute_clear(system: BoardSkillSystemCls, board: GridBoard) -> Array[Vect
 
 
 ## 投掷技能执行体
-## 1. 找随机空格 + 随机生成 Lv1 物品
+## 1. 找随机空格 + 从棋盘活跃生成器类型池随机选类型（Lv1~3 随机）
 ## 2. 数据层立即放置
 ## 3. 启动投掷动画（从屏幕上方旋转飞入）
 func _execute_throw(system: BoardSkillSystemCls, board: GridBoard) -> Array[Vector2i]:
@@ -347,11 +333,14 @@ func _execute_throw(system: BoardSkillSystemCls, board: GridBoard) -> Array[Vect
 	if empty.is_empty():
 		return []  # 没有空格
 
-	# 随机选空格 + 随机物品类型
+	# 随机选空格 + 从棋盘活跃类型池随机选物品类型
 	var target: Vector2i = empty[randi() % empty.size()]
-	var types := ["bread", "dessert", "drink"]
+	var types: Array[String] = board.get_active_item_types()
+	if types.is_empty():
+		types = ["drink"]  # 兜底
 	var item_type: String = types[randi() % types.size()]
-	var item := Item.new(item_type, 1)
+	var level: int = randi_range(1, 3)  # Lv1~3 随机
+	var item := Item.new(item_type, level)
 	ResourceDB.apply_texture_to(item)  # 必须有纹理，预览才能显示
 
 	# 数据层立即放置（预留目标格）

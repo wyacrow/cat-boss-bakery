@@ -1,12 +1,15 @@
 [gd_scene format=3 uid="uid://cbuwk2ga8wnfq"]
 
 [ext_resource type="Script" uid="uid://dilhdh8r8jqdc" path="res://scripts/core/GameScene.gd" id="1_scene"]
+[ext_resource type="Texture2D" uid="uid://corb43gr70rn6" path="res://sprites/rect.png" id="2_pynjx"]
 [ext_resource type="Texture2D" uid="uid://cgy542unwytnu" path="res://sprites/art/对钩.png" id="2_vijgj"]
 [ext_resource type="LabelSettings" uid="uid://b4iq6gtokdkud" path="res://textSetting/new_label_settings.tres" id="2_xs4ih"]
 [ext_resource type="PackedScene" uid="uid://dummycell" path="res://scenes/ui/cell_button.tscn" id="3_cell_scene"]
 [ext_resource type="Script" uid="uid://dolq2xrqfeimh" path="res://scripts/systems/GridBoard.gd" id="4_grid_board"]
 [ext_resource type="Texture2D" uid="uid://c7iyq05vp1r5c" path="res://sprites/art/金币.png" id="4_pynjx"]
+[ext_resource type="Texture2D" uid="uid://dyc4pqhbyqovo" path="res://sprites/art/订单总数打底.png" id="6_j40tv"]
 [ext_resource type="Script" uid="uid://cnieq7tpg5vc2" path="res://scripts/systems/OrderSystem.gd" id="6_order_system"]
+[ext_resource type="Script" uid="uid://bw5g4i7c2a7xc" path="res://scripts/ui/components/order_progress_bar.gd" id="7_6pl24"]
 [ext_resource type="Script" uid="uid://b4a0da2y1la11" path="res://scripts/systems/EffectsSystem.gd" id="7_effects_system"]
 
 [node name="GameScene" type="Control" unique_id=1372440440]
@@ -63,52 +66,52 @@ grow_vertical = 2
 theme_override_constants/separation = 16
 alignment = 2
 
-[node name="StaminaBar" type="ColorRect" parent="MainVBox/AreaA_Top/TopHUDBar/HUDContainer" unique_id=621885764]
+[node name="StaminaBar" type="TextureRect" parent="MainVBox/AreaA_Top/TopHUDBar/HUDContainer" unique_id=621885764]
 custom_minimum_size = Vector2(400, 48)
 layout_mode = 2
-color = Color(0.2, 0.8, 0.9, 1)
+texture = ExtResource("2_pynjx")
+expand_mode = 1
 
 [node name="Icon" type="TextureRect" parent="MainVBox/AreaA_Top/TopHUDBar/HUDContainer/StaminaBar" unique_id=1876444298]
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 0
-offset_left = 12.0
-offset_top = 3.0
-offset_right = 132.0
-offset_bottom = 123.0
+offset_right = 135.0
+offset_bottom = 135.0
 texture = ExtResource("2_vijgj")
 expand_mode = 1
 
 [node name="Txt" type="Label" parent="MainVBox/AreaA_Top/TopHUDBar/HUDContainer/StaminaBar" unique_id=-736121419]
 layout_mode = 0
-offset_left = 173.0
-offset_top = 42.0
-offset_right = 313.0
-offset_bottom = 95.0
+offset_left = 154.0
+offset_top = 35.0
+offset_right = 311.0
+offset_bottom = 100.0
 text = "0/20"
 label_settings = ExtResource("2_xs4ih")
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="GoldDisplay" type="ColorRect" parent="MainVBox/AreaA_Top/TopHUDBar/HUDContainer" unique_id=1915836777]
+[node name="GoldDisplay" type="TextureRect" parent="MainVBox/AreaA_Top/TopHUDBar/HUDContainer" unique_id=1915836777]
 custom_minimum_size = Vector2(400, 48)
 layout_mode = 2
-color = Color(0.95, 0.85, 0.2, 1)
+texture = ExtResource("2_pynjx")
+expand_mode = 1
 
 [node name="Icon" type="TextureRect" parent="MainVBox/AreaA_Top/TopHUDBar/HUDContainer/GoldDisplay" unique_id=-1933775573]
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 0
-offset_left = 11.0
-offset_top = -8.0
-offset_right = 161.0
-offset_bottom = 142.0
+offset_top = -13.0
+offset_right = 135.0
+offset_bottom = 122.0
+scale = Vector2(1.195, 1.195)
 texture = ExtResource("4_pynjx")
 expand_mode = 1
 
 [node name="Txt" type="Label" parent="MainVBox/AreaA_Top/TopHUDBar/HUDContainer/GoldDisplay" unique_id=-1395359740]
 layout_mode = 0
-offset_left = 198.0
-offset_top = 35.0
-offset_right = 323.0
+offset_left = 182.0
+offset_top = 37.0
+offset_right = 228.0
 offset_bottom = 102.0
 text = "0"
 label_settings = ExtResource("2_xs4ih")
@@ -138,6 +141,42 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.4, 0.25, 0.15, 1)
 
+[node name="OrderProgressBar" type="Control" parent="MainVBox/AreaA_Top/OrderBar"]
+layout_mode = 0
+offset_left = 20.0
+offset_top = 20.0
+offset_right = 280.0
+offset_bottom = 56.0
+script = ExtResource("7_6pl24")
+
+[node name="BgRect" type="ColorRect" parent="MainVBox/AreaA_Top/OrderBar/OrderProgressBar"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.15, 0.12, 0.08, 1)
+
+[node name="FillBar" type="ColorRect" parent="MainVBox/AreaA_Top/OrderBar/OrderProgressBar"]
+layout_mode = 1
+anchors_preset = 9
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.95, 0.75, 0.2, 1)
+
+[node name="ProgressLabel" type="Label" parent="MainVBox/AreaA_Top/OrderBar/OrderProgressBar"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "0/10"
+horizontal_alignment = 1
+vertical_alignment = 1
+
 [node name="CatArea" type="Control" parent="MainVBox/AreaA_Top" unique_id=583700965]
 layout_mode = 1
 anchors_preset = 14
@@ -150,6 +189,70 @@ offset_right = -3.0
 offset_bottom = 54.0
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="Control" type="Control" parent="MainVBox/AreaA_Top" unique_id=2098095197]
+anchors_preset = 0
+offset_left = 6.0
+offset_top = 699.0
+offset_right = 306.0
+offset_bottom = 999.0
+
+[node name="TextureRect" type="TextureRect" parent="MainVBox/AreaA_Top/Control" unique_id=2002583619]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("6_j40tv")
+expand_mode = 1
+
+[node name="Control" type="Control" parent="MainVBox/AreaA_Top/Control" unique_id=1195421994]
+anchors_preset = 0
+offset_left = 73.0
+offset_top = 235.0
+offset_right = 241.27
+offset_bottom = 275.0
+
+[node name="OrderProgressBar" type="Control" parent="MainVBox/AreaA_Top/Control/Control" unique_id=836521740]
+custom_minimum_size = Vector2(100, 36)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 3.0
+offset_bottom = 3.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("7_6pl24")
+
+[node name="BgRect" type="ColorRect" parent="MainVBox/AreaA_Top/Control/Control/OrderProgressBar" unique_id=1836492017]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.15, 0.12, 0.08, 1)
+
+[node name="FillBar" type="ColorRect" parent="MainVBox/AreaA_Top/Control/Control/OrderProgressBar" unique_id=1158072943]
+layout_mode = 1
+anchors_preset = 9
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.95, 0.75, 0.2, 1)
+
+[node name="ProgressLabel" type="Label" parent="MainVBox/AreaA_Top/Control/Control/OrderProgressBar" unique_id=1539842761]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "0/10"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="AreaB_Grid" type="Control" parent="MainVBox" unique_id=718818957]
 custom_minimum_size = Vector2(0, 1800)
@@ -360,6 +463,8 @@ layout_mode = 2
 [node name="Cell_6_3" parent="MainVBox/AreaB_Grid/GridBoard/GridContainer" unique_id=1016592657 instance=ExtResource("3_cell_scene")]
 unique_name_in_owner = true
 layout_mode = 2
+is_generator = true
+generator_type = "bread"
 
 [node name="Cell_6_4" parent="MainVBox/AreaB_Grid/GridBoard/GridContainer" unique_id=978590042 instance=ExtResource("3_cell_scene")]
 unique_name_in_owner = true
@@ -417,6 +522,7 @@ layout_mode = 2
 unique_name_in_owner = true
 layout_mode = 2
 is_generator = true
+generator_type = "drink"
 
 [node name="Cell_8_4" parent="MainVBox/AreaB_Grid/GridBoard/GridContainer" unique_id=827609803 instance=ExtResource("3_cell_scene")]
 unique_name_in_owner = true

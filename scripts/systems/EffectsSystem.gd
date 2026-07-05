@@ -23,6 +23,7 @@ var _hint_state: String = ""       # "" | "appearing" | "breathing" | "disappear
 var _gold_display: Control = null
 var _gold_label: Label = null
 var _order_bar: Control = null
+var _last_gold: int = -1   # 追踪上次金币值，用于判断增减
 
 
 func setup(grid_board: GridBoard, gold_display: Control = null, gold_label: Label = null, order_bar: Control = null) -> void:
@@ -32,6 +33,11 @@ func setup(grid_board: GridBoard, gold_display: Control = null, gold_label: Labe
 	_order_bar = order_bar
 	if not EventBus.order_completed.is_connected(_on_order_completed_effect):
 		EventBus.order_completed.connect(_on_order_completed_effect)
+	if not EventBus.gold_changed.is_connected(_on_gold_changed_effect):
+		EventBus.gold_changed.connect(_on_gold_changed_effect)
+	# 初始化上次金币值
+	if _last_gold < 0:
+		_last_gold = GameStat.get_gold()
 
 
 # ============================================================
@@ -175,7 +181,7 @@ func _kill_tween_meta(key: String) -> void:
 
 
 # ============================================================
-#  订单完成 — 金币爆散 + 吸收特效
+#  订单完成 — 金币爆散 + 吸收 + 浮字特效
 # ============================================================
 
 ## 订单完成 → 金币从订单栏爆散 → 减速 → 逐个飞向金币显示区
@@ -185,8 +191,12 @@ func _on_order_completed_effect(_order_id: String, reward_gold: int) -> void:
 
 	# 爆散起点：订单栏中心
 	var from_pos := _order_bar.global_position + _order_bar.size * Vector2(0.5, 0.5)
-	# 吸收终点：金币显示区域
+	# 吸收终点：金币显示区域（TextureRect）
 	var to_pos := _gold_display.global_position + _gold_display.size * Vector2(0.5, 0.3)
+	# 浮字目标：金币 Label 中心（精确绑定到文本位置）
+	var label_target := to_pos
+	if _gold_label:
+		label_target = _gold_label.global_position + _gold_label.size * Vector2(0.5, 0.5)
 
 	var coin_count := clampi(reward_gold / 5, 6, 16)
 	_play_coin_burst(from_pos, to_pos, coin_count)
@@ -194,7 +204,7 @@ func _on_order_completed_effect(_order_id: String, reward_gold: int) -> void:
 	# 浮字延迟到第一枚金币即将到达时出现（0.7 爆散 + 0.3 停顿 = 1.0s）
 	var delay := create_tween()
 	delay.tween_interval(1.0)
-	delay.tween_callback(func(): _play_gold_float_text(to_pos, reward_gold))
+	delay.tween_callback(func(): _play_gold_float_text(label_target, reward_gold))
 
 
 ## 金币爆散动画：从起点向四周爆散 → 减速到 0 → 逐个冲向目标点 + 缩小
@@ -319,6 +329,57 @@ func animate_number_tick(label: Label, from_val: int, to_val: int, duration: flo
 		float(from_val), float(to_val), duration
 	)
 	label.set_meta("_tick_tween", tween)
+
+
+# ============================================================
+#  金币变化特效 — Label 弹跳 + 颜色闪烁
+# ============================================================
+
+## 监听到 gold_changed 信号 → 触发金币 Label 弹跳特效
+func _on_gold_changed_effect(current: int) -> void:
+	var is_increase := current > _last_gold
+	_last_gold = current
+
+	if _gold_label and is_increase:
+		_pop_gold_label()
+
+
+## 金币 Label 弹跳特效：放大 → 缩回 → 回弹到原位（共 ~0.3s）
+## 连续触发时终止上一次动画并重新开始，形成密集的"叮叮"反馈感。
+func _pop_gold_label() -> void:
+	if not _gold_label:
+		return
+
+	# 终止上一次弹跳（如果还在播放中）
+	var existing: Tween = _gold_label.get_meta("_pop_tween", null)
+	if existing and existing.is_valid():
+		existing.kill()
+
+	# 设置缩放锚点为中心
+	_gold_label.pivot_offset = _gold_label.size / 2.0
+	_gold_label.scale = Vector2.ONE
+
+	var tween := create_tween()
+	tween.set_parallel(true)
+	tween.set_trans(Tween.TRANS_QUAD)
+
+	# 放大 + 变金色
+	tween.tween_property(_gold_label, "scale", Vector2(1.35, 1.35), 0.08)\
+		.set_ease(Tween.EASE_OUT)
+	tween.tween_property(_gold_label, "modulate", Color(1.0, 0.85, 0.15, 1.0), 0.08)\
+		.set_ease(Tween.EASE_OUT)
+
+	# 缩回 + 恢复白色
+	tween.tween_property(_gold_label, "scale", Vector2(0.92, 0.92), 0.07)\
+		.set_ease(Tween.EASE_IN).set_delay(0.08)
+	tween.tween_property(_gold_label, "modulate", Color.WHITE, 0.07)\
+		.set_ease(Tween.EASE_IN).set_delay(0.08)
+
+	# 回弹到位
+	tween.tween_property(_gold_label, "scale", Vector2.ONE, 0.1)\
+		.set_ease(Tween.EASE_OUT).set_delay(0.15)
+
+	_gold_label.set_meta("_pop_tween", tween)
 
 
 # ============================================================

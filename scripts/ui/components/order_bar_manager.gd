@@ -18,8 +18,8 @@ const ResourceDB := preload("res://scripts/data/ResourceDB.gd")
 
 ## 2 个槽位的锚定位置（相对于 OrderBar 的 offset）
 @export var slot_positions: Array[Vector2] = [
-	Vector2(20, 196),
-	Vector2(590, 196),
+	Vector2(20, 236),
+	Vector2(590, 236),
 ]
 ## 动画参数
 @export var appear_duration: float = 0.2

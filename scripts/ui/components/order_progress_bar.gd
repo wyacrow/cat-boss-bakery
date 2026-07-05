@@ -4,7 +4,7 @@ extends Control
 # ============================================================
 #  OrderProgressBar — 订单完成进度条
 #  监听 EventBus.order_progress_changed，带动画填充。
-#  视觉由 order_progress_bar.tscn 预制体决定。
+#  节点直接在 GameScene.tscn 中定义，通过 EventBus 信号驱动。
 # ============================================================
 
 var _max_count: int = 10
@@ -20,6 +20,9 @@ func _ready() -> void:
 
 	if not EventBus.order_progress_changed.is_connected(_on_progress_changed):
 		EventBus.order_progress_changed.connect(_on_progress_changed)
+
+	# 从 GameStat 读取初始值自初始化，无需 GameScene 介入
+	set_initial(GameStat.max_orders_target, GameStat.orders_completed)
 
 
 func _on_progress_changed(current: int, max_count: int) -> void:
