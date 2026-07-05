@@ -6,6 +6,8 @@ extends RefCounted
 #  纯数据层，不触碰 UI
 # ============================================================
 
+const ResourceDB := preload("res://scripts/data/ResourceDB.gd")
+
 func try_merge(item_a: Item, item_b: Item) -> Item:
 	if item_a == null or item_b == null:
 		return null
@@ -15,5 +17,5 @@ func try_merge(item_a: Item, item_b: Item) -> Item:
 		return null
 
 	var merged := Item.new(item_a.type, item_a.get_merge_result_level())
-	merged.texture = item_a.texture  # TODO: 替换为对应等级的贴图
+	ResourceDB.apply_texture_to(merged)
 	return merged

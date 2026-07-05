@@ -1,0 +1,40 @@
+{
+  "title": "序章·猫老板的早晨",
+  "characters": {
+    "bread_cat": {
+      "name": "面包猫",
+      "portrait": "res://sprites/cat.png"
+    },
+    "coffee_cat": {
+      "name": "咖啡猫",
+      "portrait": "res://sprites/cat.png"
+    }
+  },
+  "lines": [
+    {
+      "character_id": "bread_cat",
+      "position": "left",
+      "text": "今天要烤好多好多的面包喵~",
+      "sfx": ""
+    },
+    {
+      "character_id": "coffee_cat",
+      "position": "right",
+      "text": "别吵，我在煮咖啡。安静点。",
+      "sfx": ""
+    },
+    {
+      "character_id": "bread_cat",
+      "position": "left",
+      "portrait": "res://sprites/cake.png",
+      "text": "你每天就知道喝咖啡！快来帮我揉面团！",
+      "sfx": ""
+    },
+    {
+      "character_id": "",
+      "position": "center",
+      "text": "就这样，猫老板面包店忙碌的一天又开始了……",
+      "sfx": ""
+    }
+  ]
+}

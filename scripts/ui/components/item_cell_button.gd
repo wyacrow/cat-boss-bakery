@@ -4,10 +4,9 @@ extends Button
 # ============================================================
 #  ItemCellButton — 棋盘格子按钮
 #
-#  三种交互：
-#    单击  — 选中（全局互斥） + 三击收取检测
+#  两种交互：
+#    单击  — 选中（全局互斥）
 #    拖动  — 合并 / 移动 / 交换
-#    弹起  — 按落点类型决定是否播放动画
 #
 #  拖动落点行为：
 #    空格子   → 移动物品 + 选中目标 + 弹起动画
@@ -22,11 +21,12 @@ const DRAG_PREVIEW_SCENE := preload("res://scenes/ui/drag_preview.tscn")
 
 signal cell_pressed(position: Vector2i)
 signal cell_released(position: Vector2i)
-signal collect_request(item: Item, position: Vector2i)
 signal merge_request(from_pos: Vector2i, to_pos: Vector2i)
 signal move_request(from_pos: Vector2i, to_pos: Vector2i)
 
 # ── 公开数据 ──────────────────────────────────────────────
+
+@export var is_generator: bool = false
 
 var cell_position: Vector2i = Vector2i.ZERO
 var item: Item = null
@@ -46,11 +46,6 @@ var release_animation: ButtonAnimation
 
 # ── 私有状态 ──────────────────────────────────────────────
 
-# 三击检测
-var _tap_count: int = 0
-var _last_tap_time: int = 0
-const _TAP_INTERVAL: float = 0.8
-
 # 拖动状态
 var _mouse_pressed: bool = false
 var _is_dragging: bool = false
@@ -61,6 +56,7 @@ var _drag_result: String = ""  # "same" | "empty" | "different" | "cancelled"
 var _selection_frame: ColorRect
 var _drag_overlay: ColorRect
 var _item_icon: TextureRect
+var _effects: EffectsSystem = null
 
 
 # ============================================================
@@ -78,9 +74,20 @@ func _ready() -> void:
 	if _drag_overlay:
 		_drag_overlay.mouse_filter = MOUSE_FILTER_IGNORE
 
+	if is_generator:
+		_setup_generator_visual()
+
 	_setup_animations()
 	_setup_signals()
 	_init_visual_state()
+
+
+func _setup_generator_visual() -> void:
+	# 生成器格视觉：深色底 + 图标
+	self_modulate = Color(0.3, 0.4, 0.6, 1.0)
+	if _item_icon:
+		_item_icon.texture = preload("res://sprites/food.png")
+		_item_icon.visible = true
 
 
 func _setup_animations() -> void:
@@ -89,6 +96,7 @@ func _setup_animations() -> void:
 
 	release_animation = ReleaseExpandAnimation.new()
 	release_animation.target = self
+
 
 	_apply_animation_params()
 
@@ -112,18 +120,25 @@ func _init_visual_state() -> void:
 		_drag_overlay.visible = false
 
 
+func set_effects_system(effects: EffectsSystem) -> void:
+	_effects = effects
+
+
 # ============================================================
 #  输入处理
 # ============================================================
 
 func _on_button_down() -> void:
-	if item:
+	if is_generator:
+		# 生成器格：不参与选中/拖动，只发信号
+		if current_selected:
+			current_selected.deselect()
+	elif item != null:
 		_claim_global_selection()
 		if _selection_frame:
 			_selection_frame.visible = true
 			_selection_frame.move_to_front()
 	else:
-		# 空格子：清除之前选中，但不选中自己
 		if current_selected:
 			current_selected.deselect()
 
@@ -140,7 +155,6 @@ func _on_button_up() -> void:
 		return
 
 	_mouse_pressed = false
-	_handle_click()
 
 	if item:
 		play_release_animation()
@@ -153,7 +167,7 @@ func _on_button_up() -> void:
 # -- 拖动启动 -------------------------------------------------
 
 func _input(event: InputEvent) -> void:
-	if not _mouse_pressed:
+	if not _mouse_pressed or is_generator:
 		return
 
 	if event is InputEventMouseMotion and not _is_dragging and item != null:
@@ -191,7 +205,29 @@ func make_drag_preview() -> Control:
 # -- 落点处理 -------------------------------------------------
 
 func _can_drop_data(_at_position: Vector2, data: Variant) -> bool:
-	return data is Dictionary and data.has("item")
+	if is_generator:
+		return false
+	if not (data is Dictionary and data.has("item")):
+		return false
+
+	var source_item: Item = data["item"]
+	var from_pos: Vector2i = data["from_position"]
+
+	# 拖回原位 → 不显示提示
+	if from_pos == cell_position:
+		if _effects:
+			_effects.hide_any_hint()
+		return true
+
+	# 可合成 → 显示合并提示光环
+	if item != null and item.can_merge_with(source_item) and not item.is_max_level() and _effects:
+		_effects.show_merge_hint(cell_position, item)
+	else:
+		# 当前悬停格不可合成 → 隐藏提示
+		if _effects:
+			_effects.hide_any_hint()
+
+	return true
 
 
 func _drop_data(_at_position: Vector2, data: Variant) -> void:
@@ -241,6 +277,9 @@ func _notification(what: int) -> void:
 	if what == NOTIFICATION_DRAG_END and _is_dragging:
 		if _drag_result == "":
 			_drag_result = "cancelled"
+		# 拖拽结束 → 清除合并提示
+		if _effects:
+			_effects.hide_any_hint()
 		_finish_drag()
 
 
@@ -255,43 +294,17 @@ func _finish_drag() -> void:
 		"same", "cancelled":
 			play_release_animation()
 
-	_is_dragging   = false
+	_is_dragging = false
 	_mouse_pressed = false
 	_drag_result   = ""
+	# force_drag 后 Button 内部的 button_pressed 不会自动复位，
+	# 导致下次点击先触发 button_up（释放）再触发 button_down，需要点两次。
+	button_pressed = false
 
 
 func _restore_icon() -> void:
 	if _item_icon and item:
 		_item_icon.visible = true
-
-
-# ============================================================
-#  三击收取
-# ============================================================
-
-func _handle_click() -> void:
-	if _update_tap_counter():
-		if item:
-			collect_request.emit(item, cell_position)
-		_reset_tap_counter()
-
-
-func _update_tap_counter() -> bool:
-	var now := Time.get_ticks_msec()
-	var elapsed := (now - _last_tap_time) / 1000.0
-
-	if elapsed > _TAP_INTERVAL:
-		_tap_count = 1
-	else:
-		_tap_count += 1
-
-	_last_tap_time = now
-	return _tap_count >= 3
-
-
-func _reset_tap_counter() -> void:
-	_tap_count = 0
-	_last_tap_time = 0
 
 
 # ============================================================
@@ -384,6 +397,27 @@ func play_release_animation() -> void:
 	_play_release_sfx()
 
 
+func play_consume_animation() -> void:
+	# 订单消耗动画：取消选中 → 缩小消失 → 清空物品 + 恢复 scale
+	if not item:
+		scale = Vector2.ONE
+		clear_item()
+		return
+	deselect()
+	var center := size / 2.0
+	pivot_offset = center
+	var tween := create_tween()
+	tween.set_trans(Tween.TRANS_QUAD)
+	tween.set_ease(Tween.EASE_IN)
+	tween.tween_property(self, "scale", Vector2(0.0, 0.0), 0.15)
+	tween.tween_callback(_reset_after_consume)
+
+
+func _reset_after_consume() -> void:
+	scale = Vector2.ONE
+	clear_item()
+
+
 # ============================================================
 #  音效（占位）
 # ============================================================
@@ -393,8 +427,4 @@ func _play_press_sfx() -> void:
 
 
 func _play_release_sfx() -> void:
-	pass
-
-
-func _play_collect_sfx() -> void:
 	pass

@@ -1,0 +1,144 @@
+[gd_scene format=3 uid="uid://dg5hmbrsxss35"]
+
+[ext_resource type="Script" uid="uid://cm2itao62r8md" path="res://scripts/ui/components/dialogue_player.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://48jsjx0dlqm" path="res://sprites/cat.png" id="2_hyc6e"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBox_dialog"]
+content_margin_left = 48.0
+content_margin_top = 18.0
+content_margin_right = 48.0
+content_margin_bottom = 18.0
+color = Color(0.08, 0.08, 0.12, 0.92)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[node name="DialoguePlayer" type="CanvasLayer" unique_id=1371225162]
+layer = 10
+script = ExtResource("1_script")
+
+[node name="Root" type="Control" parent="." unique_id=1408782462]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Mask" type="ColorRect" parent="Root" unique_id=2084390764]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0.5)
+
+[node name="LeftPortrait" type="ColorRect" parent="Root" unique_id=49439455]
+visible = false
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 0.3
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+expand_mode = 3
+stretch_mode = 5
+
+[node name="RightPortrait" type="ColorRect" parent="Root" unique_id=312805395]
+visible = false
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.7
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+expand_mode = 3
+stretch_mode = 5
+
+[node name="BottomArea" type="Control" parent="Root" unique_id=1944200517]
+layout_mode = 1
+anchor_left = 0.1
+anchor_top = 0.75
+anchor_right = 0.9
+anchor_bottom = 0.9
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="HBox" type="HBoxContainer" parent="Root/BottomArea" unique_id=1159410869]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="LeftSlot" type="Control" parent="Root/BottomArea/HBox" unique_id=1678368322]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.3
+
+[node name="TextureRect" type="ColorRect" parent="Root/BottomArea/HBox/LeftSlot" unique_id=302935235]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_hyc6e")
+expand_mode = 1
+
+[node name="Center" type="VBoxContainer" parent="Root/BottomArea/HBox" unique_id=699387965]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.75
+
+[node name="NameLabel" type="Label" parent="Root/BottomArea/HBox/Center" unique_id=2143367576]
+layout_mode = 2
+color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 64
+
+[node name="Panel" type="PanelContainer" parent="Root/BottomArea/HBox/Center" unique_id=1028262543]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBox_dialog")
+
+[node name="DialogText" type="Label" parent="Root/BottomArea/HBox/Center/Panel" unique_id=912228341]
+layout_mode = 2
+color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 64
+autowrap_mode = 3
+
+[node name="RightSlot" type="Control" parent="Root/BottomArea/HBox" unique_id=902341607]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.3
+
+[node name="TextureRect" type="ColorRect" parent="Root/BottomArea/HBox/RightSlot" unique_id=1843078438]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+rotation = -6.2831855
+texture = ExtResource("2_hyc6e")
+expand_mode = 1
+flip_h = true
+
+[node name="ClickArea" type="Control" parent="Root" unique_id=309521869]
+layout_mode = 1
+anchor_left = 0.1
+anchor_top = 0.75
+anchor_right = 0.9
+anchor_bottom = 0.9
+grow_horizontal = 2
+grow_vertical = 2

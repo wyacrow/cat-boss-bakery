@@ -1,0 +1,94 @@
+[gd_scene format=3 uid="uid://dhf5qj5kwf3i5"]
+
+[ext_resource type="Script" uid="uid://d10xoc53g5ytm" path="res://scripts/core/DialogueTest.gd" id="1_script"]
+
+[node name="DialogueTest" type="Control" unique_id=562429104]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_script")
+
+[node name="Background" type="ColorRect" parent="." unique_id=65993242]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.2, 0.2, 0.3, 1)
+
+[node name="Label" type="Label" parent="." unique_id=1732426902]
+layout_mode = 0
+offset_left = 150.0
+offset_top = 200.0
+offset_right = 1290.0
+offset_bottom = 300.0
+theme_override_colors/font_color = Color(0.8, 0.8, 1, 1)
+theme_override_font_sizes/font_size = 40
+text = "🎬 对话系统测试场景"
+horizontal_alignment = 1
+
+[node name="HintLabel" type="Label" parent="." unique_id=1070538836]
+layout_mode = 0
+offset_left = 250.0
+offset_top = 350.0
+offset_right = 1190.0
+offset_bottom = 450.0
+theme_override_colors/font_color = Color(0.6, 0.6, 0.8, 1)
+theme_override_font_sizes/font_size = 24
+text = "对话将在场景加载后自动播放
+点击底部区域推进对话
+按空格键重新播放"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="GridMock" type="GridContainer" parent="." unique_id=772901935]
+layout_mode = 0
+offset_left = 409.0
+offset_top = 603.0
+offset_right = 1049.0
+offset_bottom = 1003.0
+columns = 4
+
+[node name="Cell1" type="ColorRect" parent="GridMock" unique_id=1875503163]
+custom_minimum_size = Vector2(140, 80)
+layout_mode = 2
+color = Color(0.3, 0.4, 0.5, 1)
+
+[node name="Cell2" type="ColorRect" parent="GridMock" unique_id=111971270]
+custom_minimum_size = Vector2(140, 80)
+layout_mode = 2
+color = Color(0.35, 0.45, 0.55, 1)
+
+[node name="Cell3" type="ColorRect" parent="GridMock" unique_id=876183833]
+custom_minimum_size = Vector2(140, 80)
+layout_mode = 2
+color = Color(0.3, 0.4, 0.5, 1)
+
+[node name="Cell4" type="ColorRect" parent="GridMock" unique_id=1943590531]
+custom_minimum_size = Vector2(140, 80)
+layout_mode = 2
+color = Color(0.35, 0.45, 0.55, 1)
+
+[node name="Cell5" type="ColorRect" parent="GridMock" unique_id=1804795485]
+custom_minimum_size = Vector2(140, 80)
+layout_mode = 2
+color = Color(0.35, 0.45, 0.55, 1)
+
+[node name="Cell6" type="ColorRect" parent="GridMock" unique_id=975804687]
+custom_minimum_size = Vector2(140, 80)
+layout_mode = 2
+color = Color(0.3, 0.4, 0.5, 1)
+
+[node name="Cell7" type="ColorRect" parent="GridMock" unique_id=1737624307]
+custom_minimum_size = Vector2(140, 80)
+layout_mode = 2
+color = Color(0.3, 0.4, 0.5, 1)
+
+[node name="Cell8" type="ColorRect" parent="GridMock" unique_id=1533090270]
+custom_minimum_size = Vector2(140, 80)
+layout_mode = 2
+color = Color(0.35, 0.45, 0.55, 1)

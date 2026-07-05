@@ -1,8 +1,11 @@
 class_name OrderSystem
 extends Node
+
+const ResourceDB := preload("res://scripts/data/ResourceDB.gd")
+
 # OrderSystem — 订单系统
 # 管理 3 个订单槽位，每 60 秒自动生成新订单（V1 不过期）。
-# 订单仅消耗库存物品，不与棋盘交互。
+# 订单直接从棋盘扣除物品，不经过库存。
 #
 # 订单生成规则（来自 spec）：
 #   - 需求 1~2 种物品，每种 1~3 个
@@ -18,44 +21,26 @@ extends Node
 #   cancel_order(order_id: String)          取消订单（调试用）
 
 # ═══════════════════════════════════════════════════════════════
-# 内嵌数据类
-# ═══════════════════════════════════════════════════════════════
-
-class OrderData:
-	var id: String = ""
-	var requirements: Dictionary = {}   # {"bread_3": 1, "dessert_2": 2}
-	var base_reward: int = 0
-
-	func _init(p_id: String, p_req: Dictionary, p_reward: int) -> void:
-		id = p_id
-		requirements = p_req
-		base_reward = p_reward
-
-	func _to_string() -> String:
-		return "OrderData(%s, req=%s, reward=%d)" % [id, requirements, base_reward]
-
-
-# ═══════════════════════════════════════════════════════════════
 # 导出配置
 # ═══════════════════════════════════════════════════════════════
 
-@export var max_orders: int = 3
+@export var max_orders: int = 2
 @export var generation_interval: float = 60.0   # 秒
 @export var cat_gold_multiplier: float = 1.0     # 咖啡猫激活时设为 1.2
 
-## 库存系统的 NodePath（场景中挂载后通过 set_inventory 注入）
-var inventory_system: Node = null
+## 棋盘引用（场景组装时注入，订单直接从棋盘扣物品）
+var grid_board: Node = null
 
 # ═══════════════════════════════════════════════════════════════
 # 内部状态
 # ═══════════════════════════════════════════════════════════════
 
-var _orders: Array[OrderData] = []   # 长度 ≤ max_orders，空槽为 null
+var _orders: Array = []   # 元素类型 OrderData，空槽为 null
 var _order_counter: int = 0
 var _gen_timer: Timer
 
 # 物品池常量
-const ITEM_TYPES := ["bread", "dessert", "drink"]
+const ITEM_TYPES := ["drink"]  # 咖啡专链（临时，V1 原型验证用）
 const LEVEL_WEIGHTS := [2, 2, 2, 2, 2, 2, 2, 2, 2, 2,   # Lv2: 50% (10/20)
 						3, 3, 3, 3, 3, 3, 3,               # Lv3: 35% (7/20)
 						4, 4, 4]                            # Lv4: 15% (3/20)
@@ -76,10 +61,8 @@ func _ready() -> void:
 	_gen_timer.one_shot = false
 	_gen_timer.timeout.connect(_on_generation_tick)
 	add_child(_gen_timer)
-	_gen_timer.start(generation_interval)
-
-	# 开局立即生成 3 个初始订单
-	_generate_initial_orders()
+	# 延迟一帧生成初始订单（timer 在初始订单完成后启动），确保 GameScene 已完成连线
+	call_deferred("_generate_initial_orders")
 
 	print("OrderSystem: initialized, %d slots, interval=%.1fs" % [max_orders, generation_interval])
 
@@ -88,35 +71,34 @@ func _ready() -> void:
 # 公开方法
 # ═══════════════════════════════════════════════════════════════
 
-## 注入库存系统引用（场景组装时调用）
-func set_inventory(node: Node) -> void:
-	inventory_system = node
-	print("OrderSystem: inventory_system set to ", node)
+## 注入棋盘引用（场景组装时调用）
+func set_grid_board(node: Node) -> void:
+	grid_board = node
+	print("OrderSystem: grid_board set to ", node)
 
 
-## 提交订单 → 校验库存 → 发放金币 → 清空槽位
+## 提交订单 → 校验棋盘 → 扣除物品 → 发放金币 → 清空槽位
 func submit_order(order_id: String) -> bool:
-	var idx := _find_order_index(order_id)
+	var idx: int = _find_order_index(order_id)
 	if idx == -1:
 		print("OrderSystem: submit failed — order '%s' not found" % order_id)
 		return false
 
-	var order: OrderData = _orders[idx]
+	var order = _orders[idx]
 	if order == null:
 		return false
 
-	# 校验库存
-	if not _validate_inventory(order.requirements):
-		print("OrderSystem: submit failed — inventory insufficient for '%s'" % order_id)
+	# 校验棋盘
+	if not _validate_grid(order.requirements):
+		print("OrderSystem: submit failed — grid insufficient for '%s'" % order_id)
 		return false
 
-	# 扣除库存物品
-	if not _consume_inventory(order.requirements):
-		# 理论上不会走到这里（已校验过），防御性编程
+	# 从棋盘扣除物品
+	if not _consume_grid(order.requirements):
 		return false
 
 	# 计算最终奖励
-	var final_reward := int(order.base_reward * cat_gold_multiplier)
+	var final_reward: int = int(order.base_reward * cat_gold_multiplier)
 	EventBus.order_completed.emit(order_id, final_reward)
 
 	print("OrderSystem: order '%s' completed, reward=%d (base=%d, mult=%.1f)" % [order_id, final_reward, order.base_reward, cat_gold_multiplier])
@@ -134,7 +116,7 @@ func get_orders() -> Array:
 
 ## 取消订单（调试/测试用）
 func cancel_order(order_id: String) -> void:
-	var idx := _find_order_index(order_id)
+	var idx: int = _find_order_index(order_id)
 	if idx != -1:
 		_orders[idx] = null
 		print("OrderSystem: order '%s' cancelled" % order_id)
@@ -148,7 +130,7 @@ func set_cat_gold_multiplier(mult: float) -> void:
 
 ## 获取当前空余槽位数
 func get_empty_slot_count() -> int:
-	var count := 0
+	var count: int = 0
 	for o in _orders:
 		if o == null:
 			count += 1
@@ -161,52 +143,62 @@ func get_empty_slot_count() -> int:
 
 func _generate_initial_orders() -> void:
 	for i in range(max_orders):
-		var order := _generate_order()
+		var order: OrderData = _generate_order()
 		_orders[i] = order
-		EventBus.order_generated.emit(order.id, order.requirements)
+		EventBus.order_generated.emit(order)
 	print("OrderSystem: %d initial orders generated" % max_orders)
+	# 初始订单填充完毕后启动定时生成
+	_gen_timer.start(generation_interval)
 
 
 func _on_generation_tick() -> void:
 	if get_empty_slot_count() == 0:
 		return  # 所有槽位已满，跳过
 
-	var order := _generate_order()
-	var idx := _find_first_empty_slot()
+	var order: OrderData = _generate_order()
+	var idx: int = _find_first_empty_slot()
 	if idx != -1:
 		_orders[idx] = order
-		EventBus.order_generated.emit(order.id, order.requirements)
+		EventBus.order_generated.emit(order)
 		print("OrderSystem: new order '%s' generated in slot %d" % [order.id, idx])
 
 
-func _generate_order() -> OrderData:
+func _generate_order():   # -> OrderData
 	_order_counter += 1
-	var order_id := "order_%03d" % _order_counter
+	var order_id: String = "order_%03d" % _order_counter
 
-	# 需求种类数：1 或 2（等概率）
-	var type_count := 1 if randi() % 2 == 0 else 2
+	# 需求种类数：1 或 2（等概率）。订单最多 2 种物品，不可超过。
+	const MAX_ITEM_TYPES_PER_ORDER := 2
+	var type_count: int = 1 if randi() % 2 == 0 else 2
+	type_count = min(type_count, ITEM_TYPES.size())
+	type_count = min(type_count, MAX_ITEM_TYPES_PER_ORDER)
 
-	var requirements := {}
+	var requirements: Dictionary = {}
 	var used_types: Array[String] = []
 
 	for _i in range(type_count):
-		var item_type := _pick_item_type(used_types)
+		var item_type: String = _pick_item_type(used_types)
 		used_types.append(item_type)
-		var level := _pick_level()
-		var quantity := randi_range(1, 3)
-		var key := "%s_%d" % [item_type, level]
+		var level: int = _pick_level()
+		var quantity: int = randi_range(1, 3)
+		var key: String = "%s_%d" % [item_type, level]
 		requirements[key] = quantity
 
 	# 计算基础奖励
-	var base_reward := _calc_base_reward(requirements)
+	var base_reward: int = _calc_base_reward(requirements)
 
-	return OrderData.new(order_id, requirements, base_reward)
+	# 随机顾客猫
+	var cat: String = _pick_customer_cat()
+
+	return OrderData.new(order_id, requirements, base_reward, cat)
 
 
 func _pick_item_type(exclude: Array[String]) -> String:
-	var pool := ITEM_TYPES.duplicate()
+	var pool: Array = ITEM_TYPES.duplicate()
 	for t in exclude:
 		pool.erase(t)
+	if pool.is_empty():
+		return ITEM_TYPES[0]  # 兜底：无可选类型时返回第一种
 	return pool[randi() % pool.size()]
 
 
@@ -214,32 +206,37 @@ func _pick_level() -> int:
 	return LEVEL_WEIGHTS[randi() % LEVEL_WEIGHTS.size()]
 
 
+func _pick_customer_cat() -> String:
+	var pool: Array[String] = ResourceDB.get_all_customer_cat_ids()
+	return pool[randi() % pool.size()]
+
+
 func _calc_base_reward(requirements: Dictionary) -> int:
-	var total := 0
-	for key in requirements:
-		var parts := key.split("_")
-		var level := int(parts[1])
+	var total: int = 0
+	for key: String in requirements:
+		var parts: PackedStringArray = key.split("_")
+		var level: int = int(parts[1])
 		var quantity: int = requirements[key]
 		total += level * 10 * quantity
 	return total
 
 
 # ═══════════════════════════════════════════════════════════════
-# 库存交互（通过注入的 inventory_system）
+# 棋盘交互（通过注入的 grid_board）
 # ═══════════════════════════════════════════════════════════════
 
-func _validate_inventory(requirements: Dictionary) -> bool:
-	if inventory_system == null:
-		print("OrderSystem: WARNING — inventory_system not set, cannot validate!")
+func _validate_grid(requirements: Dictionary) -> bool:
+	if grid_board == null:
+		print("OrderSystem: WARNING — grid_board not set, cannot validate!")
 		return false
-	return inventory_system.has_items(requirements)
+	return grid_board.has_items(requirements)
 
 
-func _consume_inventory(requirements: Dictionary) -> bool:
-	if inventory_system == null:
-		print("OrderSystem: WARNING — inventory_system not set, cannot consume!")
+func _consume_grid(requirements: Dictionary) -> bool:
+	if grid_board == null:
+		print("OrderSystem: WARNING — grid_board not set, cannot consume!")
 		return false
-	return inventory_system.remove_items(requirements)
+	return grid_board.remove_items(requirements)
 
 
 # ═══════════════════════════════════════════════════════════════
@@ -248,7 +245,7 @@ func _consume_inventory(requirements: Dictionary) -> bool:
 
 func _find_order_index(order_id: String) -> int:
 	for i in range(_orders.size()):
-		var o := _orders[i]
+		var o: OrderData = _orders[i]
 		if o != null and o.id == order_id:
 			return i
 	return -1

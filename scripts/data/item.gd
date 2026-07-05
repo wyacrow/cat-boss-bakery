@@ -6,7 +6,7 @@ extends RefCounted
 
 var type: String = ""           # "bread" | "dessert" | "drink"
 var level: int = 1              # 1~4
-var texture: Texture2D = null   # 物品图标（暂时为空）
+var texture: Texture2D = null   # 物品图标
 var display_name: String = ""   # 显示名称
 
 

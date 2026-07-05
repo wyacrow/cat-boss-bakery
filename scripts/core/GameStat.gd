@@ -9,11 +9,15 @@ extends Node
 
 var gold: int = 0
 
+## 订单完成进度追踪
+var orders_completed: int = 0
+@export var max_orders_target: int = 10   # 完成 N 单后触发里程碑
+
 
 func _ready() -> void:
-	# 监听订单完成 → 自动加金币
+	# 监听订单完成 → 自动加金币 + 更新进度
 	EventBus.order_completed.connect(_on_order_completed)
-	print("GameStat: initialized, gold=%d" % gold)
+	print("GameStat: initialized, gold=%d, progress=%d/%d" % [gold, orders_completed, max_orders_target])
 
 
 # ── 公开方法 ──────────────────────────────────────────────────
@@ -46,3 +50,6 @@ func get_gold() -> int:
 
 func _on_order_completed(_order_id: String, reward_gold: int) -> void:
 	add_gold(reward_gold)
+	orders_completed += 1
+	EventBus.order_progress_changed.emit(orders_completed, max_orders_target)
+	print("GameStat: order completed, progress=%d/%d" % [orders_completed, max_orders_target])

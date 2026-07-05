@@ -1,0 +1,68 @@
+{
+  "title": "猫老板的一天·表情演示",
+  "characters": {
+    "bread_cat": {
+      "name": "面包猫",
+      "portrait": "res://sprites/cat.png"
+    },
+    "coffee_cat": {
+      "name": "咖啡猫",
+      "portrait": "res://sprites/cat.png"
+    }
+  },
+  "lines": [
+    {
+      "character_id": "bread_cat",
+      "position": "left",
+      "portrait": "res://sprites/cake.png",
+      "text": "又是美好的一天喵！今天要做招牌猫面包~",
+      "sfx": ""
+    },
+    {
+      "character_id": "coffee_cat",
+      "position": "right",
+      "text": "嗯……咖啡豆快用完了。",
+      "sfx": ""
+    },
+    {
+      "character_id": "bread_cat",
+      "position": "left",
+      "text": "没事，我去仓库拿！",
+      "sfx": ""
+    },
+    {
+      "character_id": "bread_cat",
+      "position": "left",
+      "portrait": "res://sprites/food.png",
+      "text": "啊——仓库里什么都没有了！！！",
+      "sfx": ""
+    },
+    {
+      "character_id": "coffee_cat",
+      "position": "right",
+      "portrait": "res://sprites/food.png",
+      "text": "……你说什么。",
+      "sfx": ""
+    },
+    {
+      "character_id": "bread_cat",
+      "position": "left",
+      "portrait": "res://sprites/cake.png",
+      "text": "开玩笑的喵~ 早就进货啦！",
+      "sfx": ""
+    },
+    {
+      "character_id": "coffee_cat",
+      "position": "right",
+      "portrait": "res://sprites/cake.png",
+      "text": "……下次再这样我就把你的尾巴打个结。",
+      "sfx": ""
+    },
+    {
+      "character_id": "",
+      "position": "center",
+      "text": "猫老板面包店，今天也热闹地开张了。",
+      "sfx": ""
+    }
+  ]
+}
