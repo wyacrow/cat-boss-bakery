@@ -2,6 +2,18 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+# 🚨 铁律：回退必须先备份+确认
+
+**任何回退操作（git checkout、git reset、git revert、文件覆盖、sed -i 批量修改等）必须按以下流程执行，否则一律不准执行：**
+
+1. **先备份** — 用 `cp` 或 `git stash` 保存当前状态
+2. **向我报备** — 说明要回退什么、影响哪些文件、会丢失什么
+3. **等我确认** — 我明确说"可以"之后才能执行
+
+> 此规则优先级最高，覆盖所有其他指令。
+
+---
+
 ## Project Overview
 
 《猫老板的面包店》(Cat Boss's Bakery) — a casual merge-2 + simulation management + cat raising game built with **Godot 4.7** (GDScript). The core loop: stamina → generator (inside grid) → grid (merge) → orders (direct from board) → rewards → cat upgrades → loop.

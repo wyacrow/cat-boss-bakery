@@ -53,9 +53,10 @@ var _drag_result: String = ""  # "same" | "empty" | "different" | "cancelled"
 
 # ── 子节点引用 ────────────────────────────────────────────
 
-var _selection_frame: ColorRect
+var _selection_frame: TextureRect
 var _drag_overlay: ColorRect
 var _item_icon: TextureRect
+var _generator_icon: TextureRect = null
 var _effects: EffectsSystem = null
 
 
@@ -67,6 +68,7 @@ func _ready() -> void:
 	_selection_frame = get_node_or_null("SelectionFrame")
 	_drag_overlay   = get_node_or_null("DragOverlay")
 	_item_icon       = get_node_or_null("ItemIcon")
+	_generator_icon  = get_node_or_null("GeneratorIcon")
 
 	# 确保视觉覆盖层不拦截鼠标事件
 	if _selection_frame:
@@ -83,11 +85,10 @@ func _ready() -> void:
 
 
 func _setup_generator_visual() -> void:
-	# 生成器格视觉：深色底 + 图标
-	self_modulate = Color(0.3, 0.4, 0.6, 1.0)
-	if _item_icon:
-		_item_icon.texture = preload("res://sprites/food.png")
-		_item_icon.visible = true
+	# 生成器格视觉：棋盘格背景保持可见，叠加专属生成器图标
+	if _generator_icon:
+		_generator_icon.texture = preload("res://sprites/art/咖啡机.png")
+		_generator_icon.visible = true
 
 
 func _setup_animations() -> void:

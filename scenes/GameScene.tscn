@@ -1,13 +1,13 @@
 [gd_scene format=3 uid="uid://cbuwk2ga8wnfq"]
 
 [ext_resource type="Script" uid="uid://dilhdh8r8jqdc" path="res://scripts/core/GameScene.gd" id="1_scene"]
-
+[ext_resource type="Texture2D" uid="uid://cgy542unwytnu" path="res://sprites/art/对钩.png" id="2_vijgj"]
+[ext_resource type="LabelSettings" uid="uid://b4iq6gtokdkud" path="res://textSetting/new_label_settings.tres" id="2_xs4ih"]
+[ext_resource type="PackedScene" uid="uid://dummycell" path="res://scenes/ui/cell_button.tscn" id="3_cell_scene"]
+[ext_resource type="Script" uid="uid://dolq2xrqfeimh" path="res://scripts/systems/GridBoard.gd" id="4_grid_board"]
+[ext_resource type="Texture2D" uid="uid://c7iyq05vp1r5c" path="res://sprites/art/金币.png" id="4_pynjx"]
 [ext_resource type="Script" uid="uid://cnieq7tpg5vc2" path="res://scripts/systems/OrderSystem.gd" id="6_order_system"]
-[ext_resource type="Script" path="res://scripts/systems/EffectsSystem.gd" id="7_effects_system"]
-
-[ext_resource type="Script" uid="uid://dw1xfuslxs4kn" path="res://scripts/ui/components/item_cell_button.gd" id="2_cell_button"]
-[ext_resource type="PackedScene" path="res://scenes/ui/cell_button.tscn" id="3_cell_scene"]
-[ext_resource type="Script" path="res://scripts/systems/GridBoard.gd" id="4_grid_board"]
+[ext_resource type="Script" uid="uid://b4a0da2y1la11" path="res://scripts/systems/EffectsSystem.gd" id="7_effects_system"]
 
 [node name="GameScene" type="Control" unique_id=1372440440]
 layout_mode = 3
@@ -17,7 +17,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_scene")
-cell_button_size = Vector2(85, 85)
+cell_button_size = Vector2(191, 191)
 
 [node name="MainVBox" type="VBoxContainer" parent="." unique_id=1816066223]
 layout_mode = 1
@@ -27,12 +27,10 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = 0
-alignment = 1
 
 [node name="AreaA_Top" type="Control" parent="MainVBox" unique_id=1604444252]
-custom_minimum_size = Vector2(0, 891)
+custom_minimum_size = Vector2(0, 1000)
 layout_mode = 2
-size_flags_vertical = 3
 
 [node name="Background" type="ColorRect" parent="MainVBox/AreaA_Top" unique_id=796988307]
 layout_mode = 1
@@ -45,29 +43,77 @@ color = Color(0.15, 0.25, 0.45, 1)
 
 [node name="TopHUDBar" type="Control" parent="MainVBox/AreaA_Top" unique_id=2010890645]
 layout_mode = 1
-anchors_preset = 1
-anchor_left = 1.0
+anchor_left = 0.3
 anchor_right = 1.0
-offset_left = -400.0
-offset_top = 16.0
-offset_right = -16.0
-offset_bottom = 232.0
-grow_horizontal = 0
+anchor_bottom = 0.15
+offset_left = -13.0000305
+offset_top = 98.0
+offset_right = -33.0
+offset_bottom = 83.994995
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="HUDContainer" type="HBoxContainer" parent="MainVBox/AreaA_Top/TopHUDBar" unique_id=1319817279]
-layout_mode = 0
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 theme_override_constants/separation = 16
 alignment = 2
 
 [node name="StaminaBar" type="ColorRect" parent="MainVBox/AreaA_Top/TopHUDBar/HUDContainer" unique_id=621885764]
-custom_minimum_size = Vector2(160, 48)
+custom_minimum_size = Vector2(400, 48)
 layout_mode = 2
 color = Color(0.2, 0.8, 0.9, 1)
 
+[node name="Icon" type="TextureRect" parent="MainVBox/AreaA_Top/TopHUDBar/HUDContainer/StaminaBar" unique_id=1876444298]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 0
+offset_left = 12.0
+offset_top = 3.0
+offset_right = 132.0
+offset_bottom = 123.0
+texture = ExtResource("2_vijgj")
+expand_mode = 1
+
+[node name="Txt" type="Label" parent="MainVBox/AreaA_Top/TopHUDBar/HUDContainer/StaminaBar" unique_id=-736121419]
+layout_mode = 0
+offset_left = 173.0
+offset_top = 42.0
+offset_right = 313.0
+offset_bottom = 95.0
+text = "0/20"
+label_settings = ExtResource("2_xs4ih")
+horizontal_alignment = 1
+vertical_alignment = 1
+
 [node name="GoldDisplay" type="ColorRect" parent="MainVBox/AreaA_Top/TopHUDBar/HUDContainer" unique_id=1915836777]
-custom_minimum_size = Vector2(120, 48)
+custom_minimum_size = Vector2(400, 48)
 layout_mode = 2
 color = Color(0.95, 0.85, 0.2, 1)
+
+[node name="Icon" type="TextureRect" parent="MainVBox/AreaA_Top/TopHUDBar/HUDContainer/GoldDisplay" unique_id=-1933775573]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 0
+offset_left = 11.0
+offset_top = -8.0
+offset_right = 161.0
+offset_bottom = 142.0
+texture = ExtResource("4_pynjx")
+expand_mode = 1
+
+[node name="Txt" type="Label" parent="MainVBox/AreaA_Top/TopHUDBar/HUDContainer/GoldDisplay" unique_id=-1395359740]
+layout_mode = 0
+offset_left = 198.0
+offset_top = 35.0
+offset_right = 323.0
+offset_bottom = 102.0
+text = "0"
+label_settings = ExtResource("2_xs4ih")
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="SettingsButton" type="ColorRect" parent="MainVBox/AreaA_Top/TopHUDBar/HUDContainer" unique_id=2041735772]
 custom_minimum_size = Vector2(48, 48)
@@ -76,7 +122,6 @@ color = Color(0.3, 0.3, 0.9, 1)
 
 [node name="OrderBar" type="Control" parent="MainVBox/AreaA_Top" unique_id=518133272]
 layout_mode = 1
-anchor_left = 0.0
 anchor_top = 0.465
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -93,18 +138,22 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.4, 0.25, 0.15, 1)
 
-[node name="AreaB_Grid" type="Control" parent="MainVBox" unique_id=718818957]
-custom_minimum_size = Vector2(0, 1783)
-layout_mode = 2
-
-[node name="Background" type="ColorRect" parent="MainVBox/AreaB_Grid" unique_id=175982042]
+[node name="CatArea" type="Control" parent="MainVBox/AreaA_Top" unique_id=583700965]
 layout_mode = 1
-anchors_preset = 15
+anchors_preset = 14
+anchor_top = 0.5
 anchor_right = 1.0
-anchor_bottom = 1.0
+anchor_bottom = 0.5
+offset_left = -3.0
+offset_top = -246.0
+offset_right = -3.0
+offset_bottom = 54.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.84762645, 0.7955881, 0.7480313, 1)
+
+[node name="AreaB_Grid" type="Control" parent="MainVBox" unique_id=718818957]
+custom_minimum_size = Vector2(0, 1800)
+layout_mode = 2
 
 [node name="GridBoard" type="PanelContainer" parent="MainVBox/AreaB_Grid" unique_id=108032487]
 layout_mode = 1
@@ -124,201 +173,267 @@ propagate_maximum_size = false
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
-theme_override_constants/h_separation = 0
-theme_override_constants/v_separation = 0
+theme_override_constants/h_separation = 5
+theme_override_constants/v_separation = 5
 columns = 7
 
-[node name="Cell_0_0" instance=ExtResource("3_cell_scene") parent="MainVBox/AreaB_Grid/GridBoard/GridContainer"]
+[node name="Cell_0_0" parent="MainVBox/AreaB_Grid/GridBoard/GridContainer" unique_id=1279261984 instance=ExtResource("3_cell_scene")]
 unique_name_in_owner = true
+layout_mode = 2
 
-[node name="Cell_0_1" instance=ExtResource("3_cell_scene") parent="MainVBox/AreaB_Grid/GridBoard/GridContainer"]
+[node name="Cell_0_1" parent="MainVBox/AreaB_Grid/GridBoard/GridContainer" unique_id=1790873497 instance=ExtResource("3_cell_scene")]
 unique_name_in_owner = true
+layout_mode = 2
 
-[node name="Cell_0_2" instance=ExtResource("3_cell_scene") parent="MainVBox/AreaB_Grid/GridBoard/GridContainer"]
+[node name="Cell_0_2" parent="MainVBox/AreaB_Grid/GridBoard/GridContainer" unique_id=355427596 instance=ExtResource("3_cell_scene")]
 unique_name_in_owner = true
+layout_mode = 2
 
-[node name="Cell_0_3" instance=ExtResource("3_cell_scene") parent="MainVBox/AreaB_Grid/GridBoard/GridContainer"]
+[node name="Cell_0_3" parent="MainVBox/AreaB_Grid/GridBoard/GridContainer" unique_id=1938811111 instance=ExtResource("3_cell_scene")]
 unique_name_in_owner = true
+layout_mode = 2
 
-[node name="Cell_0_4" instance=ExtResource("3_cell_scene") parent="MainVBox/AreaB_Grid/GridBoard/GridContainer"]
+[node name="Cell_0_4" parent="MainVBox/AreaB_Grid/GridBoard/GridContainer" unique_id=1338569059 instance=ExtResource("3_cell_scene")]
 unique_name_in_owner = true
+layout_mode = 2
 
-[node name="Cell_0_5" instance=ExtResource("3_cell_scene") parent="MainVBox/AreaB_Grid/GridBoard/GridContainer"]
+[node name="Cell_0_5" parent="MainVBox/AreaB_Grid/GridBoard/GridContainer" unique_id=1367548825 instance=ExtResource("3_cell_scene")]
 unique_name_in_owner = true
+layout_mode = 2
 
-[node name="Cell_1_0" instance=ExtResource("3_cell_scene") parent="MainVBox/AreaB_Grid/GridBoard/GridContainer"]
+[node name="Cell_1_0" parent="MainVBox/AreaB_Grid/GridBoard/GridContainer" unique_id=11113492 instance=ExtResource("3_cell_scene")]
 unique_name_in_owner = true
+layout_mode = 2
 
-[node name="Cell_1_1" instance=ExtResource("3_cell_scene") parent="MainVBox/AreaB_Grid/GridBoard/GridContainer"]
+[node name="Cell_1_1" parent="MainVBox/AreaB_Grid/GridBoard/GridContainer" unique_id=1855268238 instance=ExtResource("3_cell_scene")]
 unique_name_in_owner = true
+layout_mode = 2
 
-[node name="Cell_1_2" instance=ExtResource("3_cell_scene") parent="MainVBox/AreaB_Grid/GridBoard/GridContainer"]
+[node name="Cell_1_2" parent="MainVBox/AreaB_Grid/GridBoard/GridContainer" unique_id=1721016555 instance=ExtResource("3_cell_scene")]
 unique_name_in_owner = true
+layout_mode = 2
 
-[node name="Cell_1_3" instance=ExtResource("3_cell_scene") parent="MainVBox/AreaB_Grid/GridBoard/GridContainer"]
+[node name="Cell_1_3" parent="MainVBox/AreaB_Grid/GridBoard/GridContainer" unique_id=2025566516 instance=ExtResource("3_cell_scene")]
 unique_name_in_owner = true
+layout_mode = 2
 
-[node name="Cell_1_4" instance=ExtResource("3_cell_scene") parent="MainVBox/AreaB_Grid/GridBoard/GridContainer"]
+[node name="Cell_1_4" parent="MainVBox/AreaB_Grid/GridBoard/GridContainer" unique_id=864119521 instance=ExtResource("3_cell_scene")]
 unique_name_in_owner = true
+layout_mode = 2
 
-[node name="Cell_1_5" instance=ExtResource("3_cell_scene") parent="MainVBox/AreaB_Grid/GridBoard/GridContainer"]
+[node name="Cell_1_5" parent="MainVBox/AreaB_Grid/GridBoard/GridContainer" unique_id=2132999745 instance=ExtResource("3_cell_scene")]
 unique_name_in_owner = true
+layout_mode = 2
 
-[node name="Cell_2_0" instance=ExtResource("3_cell_scene") parent="MainVBox/AreaB_Grid/GridBoard/GridContainer"]
+[node name="Cell_2_0" parent="MainVBox/AreaB_Grid/GridBoard/GridContainer" unique_id=1776952747 instance=ExtResource("3_cell_scene")]
 unique_name_in_owner = true
+layout_mode = 2
 
-[node name="Cell_2_1" instance=ExtResource("3_cell_scene") parent="MainVBox/AreaB_Grid/GridBoard/GridContainer"]
+[node name="Cell_2_1" parent="MainVBox/AreaB_Grid/GridBoard/GridContainer" unique_id=5499213 instance=ExtResource("3_cell_scene")]
 unique_name_in_owner = true
+layout_mode = 2
 
-[node name="Cell_2_2" instance=ExtResource("3_cell_scene") parent="MainVBox/AreaB_Grid/GridBoard/GridContainer"]
+[node name="Cell_2_2" parent="MainVBox/AreaB_Grid/GridBoard/GridContainer" unique_id=446988113 instance=ExtResource("3_cell_scene")]
 unique_name_in_owner = true
+layout_mode = 2
 
-[node name="Cell_2_3" instance=ExtResource("3_cell_scene") parent="MainVBox/AreaB_Grid/GridBoard/GridContainer"]
+[node name="Cell_2_3" parent="MainVBox/AreaB_Grid/GridBoard/GridContainer" unique_id=1278889995 instance=ExtResource("3_cell_scene")]
 unique_name_in_owner = true
+layout_mode = 2
 
-[node name="Cell_2_4" instance=ExtResource("3_cell_scene") parent="MainVBox/AreaB_Grid/GridBoard/GridContainer"]
+[node name="Cell_2_4" parent="MainVBox/AreaB_Grid/GridBoard/GridContainer" unique_id=853041780 instance=ExtResource("3_cell_scene")]
 unique_name_in_owner = true
+layout_mode = 2
 
-[node name="Cell_2_5" instance=ExtResource("3_cell_scene") parent="MainVBox/AreaB_Grid/GridBoard/GridContainer"]
+[node name="Cell_2_5" parent="MainVBox/AreaB_Grid/GridBoard/GridContainer" unique_id=1501397420 instance=ExtResource("3_cell_scene")]
 unique_name_in_owner = true
+layout_mode = 2
 
-[node name="Cell_3_0" instance=ExtResource("3_cell_scene") parent="MainVBox/AreaB_Grid/GridBoard/GridContainer"]
+[node name="Cell_3_0" parent="MainVBox/AreaB_Grid/GridBoard/GridContainer" unique_id=864538860 instance=ExtResource("3_cell_scene")]
 unique_name_in_owner = true
+layout_mode = 2
 
-[node name="Cell_3_1" instance=ExtResource("3_cell_scene") parent="MainVBox/AreaB_Grid/GridBoard/GridContainer"]
+[node name="Cell_3_1" parent="MainVBox/AreaB_Grid/GridBoard/GridContainer" unique_id=1643401214 instance=ExtResource("3_cell_scene")]
 unique_name_in_owner = true
+layout_mode = 2
 
-[node name="Cell_3_2" instance=ExtResource("3_cell_scene") parent="MainVBox/AreaB_Grid/GridBoard/GridContainer"]
+[node name="Cell_3_2" parent="MainVBox/AreaB_Grid/GridBoard/GridContainer" unique_id=597377178 instance=ExtResource("3_cell_scene")]
 unique_name_in_owner = true
+layout_mode = 2
 
-[node name="Cell_3_3" instance=ExtResource("3_cell_scene") parent="MainVBox/AreaB_Grid/GridBoard/GridContainer"]
+[node name="Cell_3_3" parent="MainVBox/AreaB_Grid/GridBoard/GridContainer" unique_id=223111723 instance=ExtResource("3_cell_scene")]
 unique_name_in_owner = true
+layout_mode = 2
 
-[node name="Cell_3_4" instance=ExtResource("3_cell_scene") parent="MainVBox/AreaB_Grid/GridBoard/GridContainer"]
+[node name="Cell_3_4" parent="MainVBox/AreaB_Grid/GridBoard/GridContainer" unique_id=852733703 instance=ExtResource("3_cell_scene")]
 unique_name_in_owner = true
+layout_mode = 2
 
-[node name="Cell_3_5" instance=ExtResource("3_cell_scene") parent="MainVBox/AreaB_Grid/GridBoard/GridContainer"]
+[node name="Cell_3_5" parent="MainVBox/AreaB_Grid/GridBoard/GridContainer" unique_id=309486051 instance=ExtResource("3_cell_scene")]
 unique_name_in_owner = true
+layout_mode = 2
 
-[node name="Cell_4_0" instance=ExtResource("3_cell_scene") parent="MainVBox/AreaB_Grid/GridBoard/GridContainer"]
+[node name="Cell_4_0" parent="MainVBox/AreaB_Grid/GridBoard/GridContainer" unique_id=1214278121 instance=ExtResource("3_cell_scene")]
 unique_name_in_owner = true
+layout_mode = 2
 
-[node name="Cell_4_1" instance=ExtResource("3_cell_scene") parent="MainVBox/AreaB_Grid/GridBoard/GridContainer"]
+[node name="Cell_4_1" parent="MainVBox/AreaB_Grid/GridBoard/GridContainer" unique_id=438024692 instance=ExtResource("3_cell_scene")]
 unique_name_in_owner = true
+layout_mode = 2
 
-[node name="Cell_4_2" instance=ExtResource("3_cell_scene") parent="MainVBox/AreaB_Grid/GridBoard/GridContainer"]
+[node name="Cell_4_2" parent="MainVBox/AreaB_Grid/GridBoard/GridContainer" unique_id=490024664 instance=ExtResource("3_cell_scene")]
 unique_name_in_owner = true
+layout_mode = 2
 
-[node name="Cell_4_3" instance=ExtResource("3_cell_scene") parent="MainVBox/AreaB_Grid/GridBoard/GridContainer"]
+[node name="Cell_4_3" parent="MainVBox/AreaB_Grid/GridBoard/GridContainer" unique_id=1878258866 instance=ExtResource("3_cell_scene")]
 unique_name_in_owner = true
+layout_mode = 2
 
-[node name="Cell_4_4" instance=ExtResource("3_cell_scene") parent="MainVBox/AreaB_Grid/GridBoard/GridContainer"]
+[node name="Cell_4_4" parent="MainVBox/AreaB_Grid/GridBoard/GridContainer" unique_id=325683575 instance=ExtResource("3_cell_scene")]
 unique_name_in_owner = true
+layout_mode = 2
 
-[node name="Cell_4_5" instance=ExtResource("3_cell_scene") parent="MainVBox/AreaB_Grid/GridBoard/GridContainer"]
+[node name="Cell_4_5" parent="MainVBox/AreaB_Grid/GridBoard/GridContainer" unique_id=835066103 instance=ExtResource("3_cell_scene")]
 unique_name_in_owner = true
+layout_mode = 2
 
-[node name="Cell_5_0" instance=ExtResource("3_cell_scene") parent="MainVBox/AreaB_Grid/GridBoard/GridContainer"]
+[node name="Cell_5_0" parent="MainVBox/AreaB_Grid/GridBoard/GridContainer" unique_id=1090866480 instance=ExtResource("3_cell_scene")]
 unique_name_in_owner = true
+layout_mode = 2
 
-[node name="Cell_5_1" instance=ExtResource("3_cell_scene") parent="MainVBox/AreaB_Grid/GridBoard/GridContainer"]
+[node name="Cell_5_1" parent="MainVBox/AreaB_Grid/GridBoard/GridContainer" unique_id=1948165071 instance=ExtResource("3_cell_scene")]
 unique_name_in_owner = true
+layout_mode = 2
 
-[node name="Cell_5_2" instance=ExtResource("3_cell_scene") parent="MainVBox/AreaB_Grid/GridBoard/GridContainer"]
+[node name="Cell_5_2" parent="MainVBox/AreaB_Grid/GridBoard/GridContainer" unique_id=2090166929 instance=ExtResource("3_cell_scene")]
 unique_name_in_owner = true
+layout_mode = 2
 
-[node name="Cell_5_3" instance=ExtResource("3_cell_scene") parent="MainVBox/AreaB_Grid/GridBoard/GridContainer"]
+[node name="Cell_5_3" parent="MainVBox/AreaB_Grid/GridBoard/GridContainer" unique_id=2092080043 instance=ExtResource("3_cell_scene")]
 unique_name_in_owner = true
+layout_mode = 2
 
-[node name="Cell_5_4" instance=ExtResource("3_cell_scene") parent="MainVBox/AreaB_Grid/GridBoard/GridContainer"]
+[node name="Cell_5_4" parent="MainVBox/AreaB_Grid/GridBoard/GridContainer" unique_id=1150771523 instance=ExtResource("3_cell_scene")]
 unique_name_in_owner = true
+layout_mode = 2
 
-[node name="Cell_5_5" instance=ExtResource("3_cell_scene") parent="MainVBox/AreaB_Grid/GridBoard/GridContainer"]
-unique_name_in_owner = true[node name="AreaC_Bottom" type="Control" parent="MainVBox" unique_id=391821582]
-[node name="Cell_0_6" instance=ExtResource("3_cell_scene") parent="MainVBox/AreaB_Grid/GridBoard/GridContainer"]
+[node name="Cell_5_5" parent="MainVBox/AreaB_Grid/GridBoard/GridContainer" unique_id=1904764950 instance=ExtResource("3_cell_scene")]
 unique_name_in_owner = true
+layout_mode = 2
 
-[node name="Cell_1_6" instance=ExtResource("3_cell_scene") parent="MainVBox/AreaB_Grid/GridBoard/GridContainer"]
+[node name="Cell_0_6" parent="MainVBox/AreaB_Grid/GridBoard/GridContainer" unique_id=1503504887 instance=ExtResource("3_cell_scene")]
 unique_name_in_owner = true
+layout_mode = 2
 
-[node name="Cell_2_6" instance=ExtResource("3_cell_scene") parent="MainVBox/AreaB_Grid/GridBoard/GridContainer"]
+[node name="Cell_1_6" parent="MainVBox/AreaB_Grid/GridBoard/GridContainer" unique_id=1167543925 instance=ExtResource("3_cell_scene")]
 unique_name_in_owner = true
+layout_mode = 2
 
-[node name="Cell_3_6" instance=ExtResource("3_cell_scene") parent="MainVBox/AreaB_Grid/GridBoard/GridContainer"]
+[node name="Cell_2_6" parent="MainVBox/AreaB_Grid/GridBoard/GridContainer" unique_id=500774869 instance=ExtResource("3_cell_scene")]
 unique_name_in_owner = true
+layout_mode = 2
 
-[node name="Cell_4_6" instance=ExtResource("3_cell_scene") parent="MainVBox/AreaB_Grid/GridBoard/GridContainer"]
+[node name="Cell_3_6" parent="MainVBox/AreaB_Grid/GridBoard/GridContainer" unique_id=1705819495 instance=ExtResource("3_cell_scene")]
 unique_name_in_owner = true
+layout_mode = 2
 
-[node name="Cell_5_6" instance=ExtResource("3_cell_scene") parent="MainVBox/AreaB_Grid/GridBoard/GridContainer"]
+[node name="Cell_4_6" parent="MainVBox/AreaB_Grid/GridBoard/GridContainer" unique_id=1100140614 instance=ExtResource("3_cell_scene")]
 unique_name_in_owner = true
+layout_mode = 2
 
-[node name="Cell_6_0" instance=ExtResource("3_cell_scene") parent="MainVBox/AreaB_Grid/GridBoard/GridContainer"]
+[node name="Cell_5_6" parent="MainVBox/AreaB_Grid/GridBoard/GridContainer" unique_id=1833535714 instance=ExtResource("3_cell_scene")]
 unique_name_in_owner = true
+layout_mode = 2
 
-[node name="Cell_6_1" instance=ExtResource("3_cell_scene") parent="MainVBox/AreaB_Grid/GridBoard/GridContainer"]
+[node name="Cell_6_0" parent="MainVBox/AreaB_Grid/GridBoard/GridContainer" unique_id=275503630 instance=ExtResource("3_cell_scene")]
 unique_name_in_owner = true
+layout_mode = 2
 
-[node name="Cell_6_2" instance=ExtResource("3_cell_scene") parent="MainVBox/AreaB_Grid/GridBoard/GridContainer"]
+[node name="Cell_6_1" parent="MainVBox/AreaB_Grid/GridBoard/GridContainer" unique_id=1496726178 instance=ExtResource("3_cell_scene")]
 unique_name_in_owner = true
+layout_mode = 2
 
-[node name="Cell_6_3" instance=ExtResource("3_cell_scene") parent="MainVBox/AreaB_Grid/GridBoard/GridContainer"]
+[node name="Cell_6_2" parent="MainVBox/AreaB_Grid/GridBoard/GridContainer" unique_id=15202483 instance=ExtResource("3_cell_scene")]
 unique_name_in_owner = true
+layout_mode = 2
 
-[node name="Cell_6_4" instance=ExtResource("3_cell_scene") parent="MainVBox/AreaB_Grid/GridBoard/GridContainer"]
+[node name="Cell_6_3" parent="MainVBox/AreaB_Grid/GridBoard/GridContainer" unique_id=1016592657 instance=ExtResource("3_cell_scene")]
 unique_name_in_owner = true
+layout_mode = 2
 
-[node name="Cell_6_5" instance=ExtResource("3_cell_scene") parent="MainVBox/AreaB_Grid/GridBoard/GridContainer"]
+[node name="Cell_6_4" parent="MainVBox/AreaB_Grid/GridBoard/GridContainer" unique_id=978590042 instance=ExtResource("3_cell_scene")]
 unique_name_in_owner = true
+layout_mode = 2
 
-[node name="Cell_6_6" instance=ExtResource("3_cell_scene") parent="MainVBox/AreaB_Grid/GridBoard/GridContainer"]
+[node name="Cell_6_5" parent="MainVBox/AreaB_Grid/GridBoard/GridContainer" unique_id=1509489277 instance=ExtResource("3_cell_scene")]
 unique_name_in_owner = true
+layout_mode = 2
 
-[node name="Cell_7_0" instance=ExtResource("3_cell_scene") parent="MainVBox/AreaB_Grid/GridBoard/GridContainer"]
+[node name="Cell_6_6" parent="MainVBox/AreaB_Grid/GridBoard/GridContainer" unique_id=1521251149 instance=ExtResource("3_cell_scene")]
 unique_name_in_owner = true
+layout_mode = 2
 
-[node name="Cell_7_1" instance=ExtResource("3_cell_scene") parent="MainVBox/AreaB_Grid/GridBoard/GridContainer"]
+[node name="Cell_7_0" parent="MainVBox/AreaB_Grid/GridBoard/GridContainer" unique_id=602667805 instance=ExtResource("3_cell_scene")]
 unique_name_in_owner = true
+layout_mode = 2
 
-[node name="Cell_7_2" instance=ExtResource("3_cell_scene") parent="MainVBox/AreaB_Grid/GridBoard/GridContainer"]
+[node name="Cell_7_1" parent="MainVBox/AreaB_Grid/GridBoard/GridContainer" unique_id=1383346979 instance=ExtResource("3_cell_scene")]
 unique_name_in_owner = true
+layout_mode = 2
 
-[node name="Cell_7_3" instance=ExtResource("3_cell_scene") parent="MainVBox/AreaB_Grid/GridBoard/GridContainer"]
+[node name="Cell_7_2" parent="MainVBox/AreaB_Grid/GridBoard/GridContainer" unique_id=1043938673 instance=ExtResource("3_cell_scene")]
 unique_name_in_owner = true
+layout_mode = 2
 
-[node name="Cell_7_4" instance=ExtResource("3_cell_scene") parent="MainVBox/AreaB_Grid/GridBoard/GridContainer"]
+[node name="Cell_7_3" parent="MainVBox/AreaB_Grid/GridBoard/GridContainer" unique_id=1227964481 instance=ExtResource("3_cell_scene")]
 unique_name_in_owner = true
+layout_mode = 2
 
-[node name="Cell_7_5" instance=ExtResource("3_cell_scene") parent="MainVBox/AreaB_Grid/GridBoard/GridContainer"]
+[node name="Cell_7_4" parent="MainVBox/AreaB_Grid/GridBoard/GridContainer" unique_id=1989070047 instance=ExtResource("3_cell_scene")]
 unique_name_in_owner = true
+layout_mode = 2
 
-[node name="Cell_7_6" instance=ExtResource("3_cell_scene") parent="MainVBox/AreaB_Grid/GridBoard/GridContainer"]
+[node name="Cell_7_5" parent="MainVBox/AreaB_Grid/GridBoard/GridContainer" unique_id=1881001931 instance=ExtResource("3_cell_scene")]
 unique_name_in_owner = true
+layout_mode = 2
 
-[node name="Cell_8_0" instance=ExtResource("3_cell_scene") parent="MainVBox/AreaB_Grid/GridBoard/GridContainer"]
+[node name="Cell_7_6" parent="MainVBox/AreaB_Grid/GridBoard/GridContainer" unique_id=2042062490 instance=ExtResource("3_cell_scene")]
 unique_name_in_owner = true
+layout_mode = 2
 
-[node name="Cell_8_1" instance=ExtResource("3_cell_scene") parent="MainVBox/AreaB_Grid/GridBoard/GridContainer"]
+[node name="Cell_8_0" parent="MainVBox/AreaB_Grid/GridBoard/GridContainer" unique_id=182890872 instance=ExtResource("3_cell_scene")]
 unique_name_in_owner = true
+layout_mode = 2
 
-[node name="Cell_8_2" instance=ExtResource("3_cell_scene") parent="MainVBox/AreaB_Grid/GridBoard/GridContainer"]
+[node name="Cell_8_1" parent="MainVBox/AreaB_Grid/GridBoard/GridContainer" unique_id=553801618 instance=ExtResource("3_cell_scene")]
 unique_name_in_owner = true
+layout_mode = 2
 
-[node name="Cell_8_3" instance=ExtResource("3_cell_scene") parent="MainVBox/AreaB_Grid/GridBoard/GridContainer"]
+[node name="Cell_8_2" parent="MainVBox/AreaB_Grid/GridBoard/GridContainer" unique_id=1699002118 instance=ExtResource("3_cell_scene")]
 unique_name_in_owner = true
+layout_mode = 2
 
-[node name="Cell_8_4" instance=ExtResource("3_cell_scene") parent="MainVBox/AreaB_Grid/GridBoard/GridContainer"]
+[node name="Cell_8_3" parent="MainVBox/AreaB_Grid/GridBoard/GridContainer" unique_id=1091808272 instance=ExtResource("3_cell_scene")]
 unique_name_in_owner = true
+layout_mode = 2
+is_generator = true
 
-[node name="Cell_8_5" instance=ExtResource("3_cell_scene") parent="MainVBox/AreaB_Grid/GridBoard/GridContainer"]
+[node name="Cell_8_4" parent="MainVBox/AreaB_Grid/GridBoard/GridContainer" unique_id=827609803 instance=ExtResource("3_cell_scene")]
 unique_name_in_owner = true
+layout_mode = 2
 
-[node name="Cell_8_6" instance=ExtResource("3_cell_scene") parent="MainVBox/AreaB_Grid/GridBoard/GridContainer"]
+[node name="Cell_8_5" parent="MainVBox/AreaB_Grid/GridBoard/GridContainer" unique_id=1356199824 instance=ExtResource("3_cell_scene")]
 unique_name_in_owner = true
+layout_mode = 2
 
+[node name="Cell_8_6" parent="MainVBox/AreaB_Grid/GridBoard/GridContainer" unique_id=810776623 instance=ExtResource("3_cell_scene")]
+unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 200)
 layout_mode = 2
 size_flags_vertical = 3
+
+[node name="AreaC_Bottom" type="Control" parent="MainVBox" unique_id=391821582]
+layout_mode = 2
 
 [node name="Background" type="ColorRect" parent="MainVBox/AreaC_Bottom" unique_id=1935573584]
 layout_mode = 1
@@ -356,9 +471,8 @@ custom_minimum_size = Vector2(60, 60)
 layout_mode = 2
 color = Color(0.85, 0.2, 0.3, 1)
 
-
-[node name="OrderSystem" type="Node" parent="."]
+[node name="OrderSystem" type="Node" parent="." unique_id=78142972]
 script = ExtResource("6_order_system")
 
-[node name="EffectsSystem" type="Node" parent="."]
+[node name="EffectsSystem" type="Node" parent="." unique_id=843102822]
 script = ExtResource("7_effects_system")
