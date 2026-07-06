@@ -25,6 +25,15 @@ signal gold_changed(current: int)
 ## 订单完成进度变化：current=当前完成数，max_count=目标总数
 signal order_progress_changed(current: int, max_count: int)
 
+## 关卡完成：关卡内全部订单已完成
+signal level_completed(level_id: String)
+
+## 关卡加载：新关卡已加载
+signal level_loaded(level_id: String, total_orders: int)
+
+## 订单槽位释放：OrderBarManager 消失动画完成后发出，OrderSystem 监听后补入新订单
+signal order_slot_freed()
+
 
 func _ready() -> void:
 	print("EventBus: autoload initialized, %d signals registered" % get_signal_list().size())

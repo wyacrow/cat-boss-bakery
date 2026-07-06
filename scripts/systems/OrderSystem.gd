@@ -1,35 +1,40 @@
 class_name OrderSystem
 extends Node
 
-const ResourceDB := preload("res://scripts/data/ResourceDB.gd")
+const LevelConfig := preload("res://scripts/data/LevelConfig.gd")
 
-# OrderSystem — 订单系统
-# 管理 3 个订单槽位，每 60 秒自动生成新订单（V1 不过期）。
+# OrderSystem — 订单系统（关卡配表制）
+# 每个关卡预定义订单列表，2 个槽位展示，完成一个后从队列补入下一个。
+# 关卡内全部订单完成后自动推进到下一关。
+#
 # 订单直接从棋盘扣除物品，不经过库存。
 #
-# 订单生成规则（来自 spec）：
-#   - 需求 1~2 种物品，每种 1~3 个
-#   - 物品等级仅 Lv2~Lv4（权重：Lv2=50%, Lv3=35%, Lv4=15%）
-#   - 三种链等概率选择（面包 33% / 甜点 33% / 饮品 33%）
-#   - 2 种物品时不可重复同链
-#   - 基础奖励 = Σ(item.level × 10 × quantity)
-#   - 最终奖励 = 基础奖励 × cat_gold_multiplier
-#
 # 对外接口：
-#   submit_order(order_id: String) -> bool  提交订单
-#   get_orders() -> Array[OrderData]       查询当前所有订单
-#   cancel_order(order_id: String)          取消订单（调试用）
+#   load_level(level_id: String)             加载关卡
+#   submit_order(order_id: String) -> bool    提交订单
+#   get_orders() -> Array[OrderData]         查询当前所有订单
+#   cancel_order(order_id: String)            取消订单（调试用）
+#   get_level_progress() -> Dictionary        {current: int, max: int}
+#   advance_to_next_level()                   手动推进下一关
 
 # ═══════════════════════════════════════════════════════════════
 # 导出配置
 # ═══════════════════════════════════════════════════════════════
 
 @export var max_orders: int = 2
-@export var generation_interval: float = 60.0   # 秒
 @export var cat_gold_multiplier: float = 1.0     # 咖啡猫激活时设为 1.2
 
 ## 棋盘引用（场景组装时注入，订单直接从棋盘扣物品）
 var grid_board: Node = null
+
+# ═══════════════════════════════════════════════════════════════
+# 关卡状态
+# ═══════════════════════════════════════════════════════════════
+
+var _current_level_id: String = ""
+var _order_queue: Array = []            # 当前关卡尚未展示的订单数据（Dictionary）
+var _level_orders_completed: int = 0
+var _level_total_orders: int = 0
 
 # ═══════════════════════════════════════════════════════════════
 # 内部状态
@@ -37,13 +42,6 @@ var grid_board: Node = null
 
 var _orders: Array = []   # 元素类型 OrderData，空槽为 null
 var _order_counter: int = 0
-var _gen_timer: Timer
-
-# 物品池常量
-const ITEM_TYPES := ["drink"]  # 咖啡专链（临时，V1 原型验证用）
-const LEVEL_WEIGHTS := [2, 2, 2, 2, 2, 2, 2, 2, 2, 2,   # Lv2: 50% (10/20)
-						3, 3, 3, 3, 3, 3, 3,               # Lv3: 35% (7/20)
-						4, 4, 4]                            # Lv4: 15% (3/20)
 
 
 # ═══════════════════════════════════════════════════════════════
@@ -51,20 +49,104 @@ const LEVEL_WEIGHTS := [2, 2, 2, 2, 2, 2, 2, 2, 2, 2,   # Lv2: 50% (10/20)
 # ═══════════════════════════════════════════════════════════════
 
 func _ready() -> void:
-	# 初始化槽位（全部为空）
+	# 初始化槽位（全部为空），等待 GameScene 调用 load_level()
 	_orders.resize(max_orders)
 	for i in range(max_orders):
 		_orders[i] = null
 
-	# 启动定时器
-	_gen_timer = Timer.new()
-	_gen_timer.one_shot = false
-	_gen_timer.timeout.connect(_on_generation_tick)
-	add_child(_gen_timer)
-	# 延迟一帧生成初始订单（timer 在初始订单完成后启动），确保 GameScene 已完成连线
-	call_deferred("_generate_initial_orders")
+	# 监听槽位释放信号：OrderBarManager 消失动画完成后补入新订单
+	if not EventBus.order_slot_freed.is_connected(_fill_slots):
+		EventBus.order_slot_freed.connect(_fill_slots)
 
-	print("OrderSystem: initialized, %d slots, interval=%.1fs" % [max_orders, generation_interval])
+	print("OrderSystem: initialized, %d slots, waiting for level load" % max_orders)
+
+
+# ═══════════════════════════════════════════════════════════════
+# 关卡管理
+# ═══════════════════════════════════════════════════════════════
+
+## 加载指定关卡：清空现有槽位和队列，从配表读取订单列表，填满槽位
+func load_level(level_id: String) -> void:
+	var level_data: Dictionary = LevelConfig.get_level(level_id)
+	if level_data.is_empty():
+		print("OrderSystem: ERROR — level '%s' not found in LevelConfig" % level_id)
+		return
+
+	# 清空现有槽位（通知 UI 清理）
+	for i in range(_orders.size()):
+		if _orders[i] != null:
+			_orders[i] = null
+
+	# 清空队列
+	_order_queue.clear()
+
+	# 从配表加载订单数据入队
+	var order_configs: Array = level_data.get("orders", [])
+	for cfg in order_configs:
+		_order_queue.append(cfg.duplicate())
+
+	# 设置关卡状态
+	_current_level_id = level_id
+	_level_total_orders = order_configs.size()
+	_level_orders_completed = 0
+
+	# 同步 GameStat
+	GameStat.orders_completed = 0
+	GameStat.max_orders_target = _level_total_orders
+
+	print("OrderSystem: level '%s' loaded — '%s', %d orders in queue" % [level_id, level_data.get("name", ""), _level_total_orders])
+
+	# 通知 UI
+	EventBus.level_loaded.emit(level_id, _level_total_orders)
+	EventBus.order_progress_changed.emit(0, _level_total_orders)
+
+	# 填满 2 个槽位
+	_fill_slots()
+
+
+## 推进到下一关
+func advance_to_next_level() -> void:
+	var next_id: String = LevelConfig.get_next_level_id(_current_level_id)
+	if next_id != "":
+		print("OrderSystem: advancing to '%s'" % next_id)
+		load_level(next_id)
+	else:
+		print("OrderSystem: all levels cleared! Game complete.")
+		# V1: 通关后不自动循环，可在此扩展通关界面
+
+
+## 获取当前关卡进度
+func get_level_progress() -> Dictionary:
+	return {
+		"current": _level_orders_completed,
+		"max": _level_total_orders,
+		"level_id": _current_level_id,
+	}
+
+
+# ═══════════════════════════════════════════════════════════════
+# 槽位填充（队列 → 槽位）
+# ═══════════════════════════════════════════════════════════════
+
+## 遍历所有槽位，空槽从队列头部取订单填入
+func _fill_slots() -> void:
+	for i in range(max_orders):
+		if _orders[i] == null and _order_queue.size() > 0:
+			var order_cfg: Dictionary = _order_queue.pop_front()
+			_order_counter += 1
+			var order_id: String = "order_%03d" % _order_counter
+
+			var order := OrderData.new(
+				order_id,
+				order_cfg.get("requirements", {}),
+				order_cfg.get("base_reward", 0),
+				order_cfg.get("customer_cat", ""),
+				_current_level_id
+			)
+
+			_orders[i] = order
+			EventBus.order_generated.emit(order)
+			print("OrderSystem: order '%s' placed in slot %d (queue remaining: %d)" % [order_id, i, _order_queue.size()])
 
 
 # ═══════════════════════════════════════════════════════════════
@@ -77,7 +159,7 @@ func set_grid_board(node: Node) -> void:
 	print("OrderSystem: grid_board set to ", node)
 
 
-## 提交订单 → 校验棋盘 → 扣除物品 → 发放金币 → 清空槽位
+## 提交订单 → 校验棋盘 → 扣除物品 → 发放金币 → 清空槽位 → 补入队列 → 检查关卡完成
 func submit_order(order_id: String) -> bool:
 	var idx: int = _find_order_index(order_id)
 	if idx == -1:
@@ -106,7 +188,24 @@ func submit_order(order_id: String) -> bool:
 	# 清空槽位
 	_orders[idx] = null
 
+	# 更新关卡进度
+	_level_orders_completed += 1
+	EventBus.order_progress_changed.emit(_level_orders_completed, _level_total_orders)
+
+	# 不立即 fill_slots — 等待 OrderBarManager 消失动画完成后通过 order_slot_freed 信号触发
+
+	# 检查关卡是否完成
+	if _level_orders_completed >= _level_total_orders:
+		# 延迟一帧 emit，确保 UI（OrderBarManager 动画等）已处理完毕
+		call_deferred("_emit_level_completed")
+
 	return true
+
+
+func _emit_level_completed() -> void:
+	print("OrderSystem: level '%s' completed! %d/%d orders done" % [_current_level_id, _level_orders_completed, _level_total_orders])
+	EventBus.level_completed.emit(_current_level_id)
+	advance_to_next_level()
 
 
 ## 获取当前所有订单（含空槽返回 null）
@@ -120,105 +219,14 @@ func cancel_order(order_id: String) -> void:
 	if idx != -1:
 		_orders[idx] = null
 		print("OrderSystem: order '%s' cancelled" % order_id)
+		# 取消后尝试从队列补入
+		_fill_slots()
 
 
 ## 设置猫咪金币倍率
 func set_cat_gold_multiplier(mult: float) -> void:
 	cat_gold_multiplier = mult
 	print("OrderSystem: cat_gold_multiplier = %.1f" % mult)
-
-
-## 获取当前空余槽位数
-func get_empty_slot_count() -> int:
-	var count: int = 0
-	for o in _orders:
-		if o == null:
-			count += 1
-	return count
-
-
-# ═══════════════════════════════════════════════════════════════
-# 订单生成
-# ═══════════════════════════════════════════════════════════════
-
-func _generate_initial_orders() -> void:
-	for i in range(max_orders):
-		var order: OrderData = _generate_order()
-		_orders[i] = order
-		EventBus.order_generated.emit(order)
-	print("OrderSystem: %d initial orders generated" % max_orders)
-	# 初始订单填充完毕后启动定时生成
-	_gen_timer.start(generation_interval)
-
-
-func _on_generation_tick() -> void:
-	if get_empty_slot_count() == 0:
-		return  # 所有槽位已满，跳过
-
-	var order: OrderData = _generate_order()
-	var idx: int = _find_first_empty_slot()
-	if idx != -1:
-		_orders[idx] = order
-		EventBus.order_generated.emit(order)
-		print("OrderSystem: new order '%s' generated in slot %d" % [order.id, idx])
-
-
-func _generate_order():   # -> OrderData
-	_order_counter += 1
-	var order_id: String = "order_%03d" % _order_counter
-
-	# 需求种类数：1 或 2（等概率）。订单最多 2 种物品，不可超过。
-	const MAX_ITEM_TYPES_PER_ORDER := 2
-	var type_count: int = 1 if randi() % 2 == 0 else 2
-	type_count = min(type_count, ITEM_TYPES.size())
-	type_count = min(type_count, MAX_ITEM_TYPES_PER_ORDER)
-
-	var requirements: Dictionary = {}
-	var used_types: Array[String] = []
-
-	for _i in range(type_count):
-		var item_type: String = _pick_item_type(used_types)
-		used_types.append(item_type)
-		var level: int = _pick_level()
-		var quantity: int = randi_range(1, 3)
-		var key: String = "%s_%d" % [item_type, level]
-		requirements[key] = quantity
-
-	# 计算基础奖励
-	var base_reward: int = _calc_base_reward(requirements)
-
-	# 随机顾客猫
-	var cat: String = _pick_customer_cat()
-
-	return OrderData.new(order_id, requirements, base_reward, cat)
-
-
-func _pick_item_type(exclude: Array[String]) -> String:
-	var pool: Array = ITEM_TYPES.duplicate()
-	for t in exclude:
-		pool.erase(t)
-	if pool.is_empty():
-		return ITEM_TYPES[0]  # 兜底：无可选类型时返回第一种
-	return pool[randi() % pool.size()]
-
-
-func _pick_level() -> int:
-	return LEVEL_WEIGHTS[randi() % LEVEL_WEIGHTS.size()]
-
-
-func _pick_customer_cat() -> String:
-	var pool: Array[String] = ResourceDB.get_all_customer_cat_ids()
-	return pool[randi() % pool.size()]
-
-
-func _calc_base_reward(requirements: Dictionary) -> int:
-	var total: int = 0
-	for key: String in requirements:
-		var parts: PackedStringArray = key.split("_")
-		var level: int = int(parts[1])
-		var quantity: int = requirements[key]
-		total += level * 10 * quantity
-	return total
 
 
 # ═══════════════════════════════════════════════════════════════

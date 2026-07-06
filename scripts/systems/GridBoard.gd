@@ -12,14 +12,26 @@ var grid_rows: int = 0
 var grid_data: Array = []          # Array[Array] of Item|null
 var _cells: Array = []             # flat ItemCellButton refs
 var _merge_system: MergeSystem
-var _generator: GeneratorSystem
+var _generators: Dictionary = {}   # String -> GeneratorSystem（key 为 generator_type）
 var _stamina: Node = null
+
+
+## 返回当前棋盘上所有活跃生成器的物品类型列表
+func get_active_item_types() -> Array[String]:
+	var types: Array[String] = []
+	for key in _generators:
+		types.append(key)
+	return types
 
 # ── 生命周期 ──────────────────────────────────────────────
 
 func _ready() -> void:
 	_merge_system = MergeSystem.new()
-	_generator = GeneratorSystem.new()
+	# 创建两个类型化生成器实例：饮品 + 面包
+	_generators["drink"] = GeneratorSystem.new()
+	_generators["drink"].generator_type = "drink"
+	_generators["bread"] = GeneratorSystem.new()
+	_generators["bread"].generator_type = "bread"
 	_init_grid_data()
 	_init_cells()
 
@@ -56,21 +68,32 @@ func _init_grid_data() -> void:
 
 
 func _place_initial_items() -> void:
-	# 咖啡专链：Row 0 — drink Lv1, Lv1, Lv2, Lv1
+	# ── 饮品链：Row 0 — drink Lv1, Lv1, Lv2, Lv1
 	_place_item(0, 0, "drink", 1)
 	_place_item(0, 1, "drink", 1)
 	_place_item(0, 2, "drink", 2)
 	_place_item(0, 3, "drink", 1)
 
-	# 咖啡专链：Row 1 — drink Lv1, Lv1, Lv2
+	# ── 饮品链：Row 1 — drink Lv1, Lv1, Lv2
 	_place_item(1, 0, "drink", 1)
 	_place_item(1, 1, "drink", 1)
 	_place_item(1, 2, "drink", 2)
+
+	# ── 面包链：Row 2 — bread Lv1, Lv1, Lv2
+	_place_item(2, 0, "bread", 1)
+	_place_item(2, 1, "bread", 1)
+	_place_item(2, 2, "bread", 2)
+
+	# ── 面包链：Row 3 — bread Lv1, Lv1
+	_place_item(3, 0, "bread", 1)
+	_place_item(3, 1, "bread", 1)
 
 	# 通知棋盘初始化完成
 	var init_positions: Array[Vector2i] = [
 		Vector2i(0, 0), Vector2i(1, 0), Vector2i(2, 0), Vector2i(3, 0),
 		Vector2i(0, 1), Vector2i(1, 1), Vector2i(2, 1),
+		Vector2i(0, 2), Vector2i(1, 2), Vector2i(2, 2),
+		Vector2i(0, 3), Vector2i(1, 3),
 	]
 	EventBus.grid_changed.emit(init_positions)
 
@@ -106,7 +129,7 @@ func _init_cells() -> void:
 
 		# 连接信号
 		if cell.is_generator:
-			cell.cell_pressed.connect(_on_generator_pressed)
+			cell.cell_pressed.connect(_on_generator_pressed.bind(cell.generator_type))
 		else:
 			cell.merge_request.connect(_on_merge_request)
 			cell.move_request.connect(_on_move_request)
@@ -115,20 +138,27 @@ func _init_cells() -> void:
 		idx += 1
 
 
-## 生成器格被点击 → 消耗体力生成物品到最近空位
-func _on_generator_pressed(pos: Vector2i) -> void:
-	try_generate_from(pos)
+## 生成器格被点击 → 根据 generator_type 路由到对应 GeneratorSystem 实例
+func _on_generator_pressed(pos: Vector2i, gen_type: String) -> void:
+	AudioManager.play_sfx("bakery_basket_tap_rustle")
+	try_generate_from(pos, gen_type)
 
 
-## 公开生成入口：由生成器按钮调用
+## 公开生成入口：根据生成器类型调用对应 GeneratorSystem
 ## 流程：找空位 → 消耗体力 → 创建物品 → 立即预留目标格 → 投掷动画 → UI 更新 + 弹跳
-func try_generate_from(from_pos: Vector2i) -> bool:
+func try_generate_from(from_pos: Vector2i, gen_type: String = "drink") -> bool:
 	if _stamina == null:
 		print("GridBoard: stamina system not set, generation failed")
 		return false
 
-	var result := _generator.try_generate(self, _stamina, from_pos)
+	var gen: GeneratorSystem = _generators.get(gen_type, null)
+	if gen == null:
+		print("GridBoard: no generator for type '%s'" % gen_type)
+		return false
+
+	var result := gen.try_generate(self, _stamina, from_pos)
 	if result.is_empty():
+		AudioManager.play_sfx("board_full_meow")
 		return false
 
 	var item: Item = result["item"]
@@ -136,6 +166,8 @@ func try_generate_from(from_pos: Vector2i) -> bool:
 
 	# 立即预留目标格（防止快速连点时重复命中同一空格）
 	set_item_at(target, item)
+
+	AudioManager.play_sfx("bakery_item_spawn_plop")
 
 	# 播放投掷预览动画（纯视觉，数据已就位）
 	_play_throw_animation(from_pos, target, item)
@@ -198,7 +230,7 @@ func _place_generated_item(to_pos: Vector2i, item: Item) -> void:
 
 
 ## 从指定位置出发，找曼哈顿距离最近的空位
-## 棋盘满时返回 null
+## 棋盘满时返回 Vector2i(-1, -1)
 func find_nearest_empty(from_pos: Vector2i) -> Vector2i:
 	var best := Vector2i(-1, -1)
 	var best_dist := 9999

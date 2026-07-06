@@ -17,7 +17,9 @@
       "Bash(mkdir -p d:/Godot/test/scripts/effects d:/Godot/test/scenes/effects)",
       "Bash(mkdir -p d:/Godot/test/scripts/systems)",
       "Bash(ls -la .godot/editor/*GameScene*)",
-      "Bash(ls -la scenes/GameScene.tscn*)"
+      "Bash(ls -la scenes/GameScene.tscn*)",
+      "mcp__godot__run_project",
+      "mcp__godot__get_debug_output"
     ],
     "additionalDirectories": [
       "d:\\Godot\\test\\scripts"

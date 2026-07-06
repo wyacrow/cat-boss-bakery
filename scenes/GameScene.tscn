@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://cbuwk2ga8wnfq"]
 
 [ext_resource type="Script" uid="uid://dilhdh8r8jqdc" path="res://scripts/core/GameScene.gd" id="1_scene"]
+[ext_resource type="Texture2D" uid="uid://cur658rgfi4yp" path="res://sprites/BG.png" id="2_6pl24"]
 [ext_resource type="Texture2D" uid="uid://corb43gr70rn6" path="res://sprites/rect.png" id="2_pynjx"]
 [ext_resource type="Texture2D" uid="uid://cgy542unwytnu" path="res://sprites/art/对钩.png" id="2_vijgj"]
 [ext_resource type="LabelSettings" uid="uid://b4iq6gtokdkud" path="res://textSetting/new_label_settings.tres" id="2_xs4ih"]
@@ -11,6 +12,13 @@
 [ext_resource type="Script" uid="uid://cnieq7tpg5vc2" path="res://scripts/systems/OrderSystem.gd" id="6_order_system"]
 [ext_resource type="Script" uid="uid://bw5g4i7c2a7xc" path="res://scripts/ui/components/order_progress_bar.gd" id="7_6pl24"]
 [ext_resource type="Script" uid="uid://b4a0da2y1la11" path="res://scripts/systems/EffectsSystem.gd" id="7_effects_system"]
+[ext_resource type="Texture2D" uid="uid://cq35iibyeve8f" path="res://sprites/生成圆角矩形-no-bg.png" id="7_w22tq"]
+[ext_resource type="Texture2D" uid="uid://cxashnnkfww0i" path="res://sprites/生成描边矩形-no-bg.png" id="8_e8rlm"]
+[ext_resource type="Texture2D" uid="uid://d2mapis0vc0qa" path="res://sprites/orange (1).png" id="10_21xg8"]
+[ext_resource type="Texture2D" uid="uid://bxg2lm5y0k0bi" path="res://sprites/white_64.png" id="10_e8rlm"]
+[ext_resource type="Texture2D" uid="uid://ctq4j43vfvcf0" path="res://sprites/art/单个订单格子.png" id="14_kxqg4"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_GridBoard"]
 
 [node name="GameScene" type="Control" unique_id=1372440440]
 layout_mode = 3
@@ -35,14 +43,15 @@ theme_override_constants/separation = 0
 custom_minimum_size = Vector2(0, 1000)
 layout_mode = 2
 
-[node name="Background" type="ColorRect" parent="MainVBox/AreaA_Top" unique_id=796988307]
+[node name="Background" type="TextureRect" parent="MainVBox/AreaA_Top" unique_id=796988307]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.15, 0.25, 0.45, 1)
+texture = ExtResource("2_6pl24")
+expand_mode = 1
 
 [node name="TopHUDBar" type="Control" parent="MainVBox/AreaA_Top" unique_id=2010890645]
 layout_mode = 1
@@ -132,50 +141,38 @@ offset_left = 300.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Background" type="ColorRect" parent="MainVBox/AreaA_Top/OrderBar" unique_id=1822038681]
+[node name="Background2" type="TextureRect" parent="MainVBox/AreaA_Top/OrderBar" unique_id=1337571255]
+modulate = Color(0.9878966, 0.9762216, 0.7713993, 1)
 layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
+anchors_preset = -1
+anchor_left = 0.014
+anchor_top = 0.305
+anchor_right = 0.98
+anchor_bottom = 0.905
+offset_left = -14.5
+offset_top = 44.0
+offset_right = -14.5
+offset_bottom = 44.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.4, 0.25, 0.15, 1)
+texture = ExtResource("10_e8rlm")
+expand_mode = 1
 
-[node name="OrderProgressBar" type="Control" parent="MainVBox/AreaA_Top/OrderBar"]
-layout_mode = 0
-offset_left = 20.0
-offset_top = 20.0
-offset_right = 280.0
-offset_bottom = 56.0
-script = ExtResource("7_6pl24")
-
-[node name="BgRect" type="ColorRect" parent="MainVBox/AreaA_Top/OrderBar/OrderProgressBar"]
+[node name="Background" type="TextureRect" parent="MainVBox/AreaA_Top/OrderBar" unique_id=1822038681]
 layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
+anchors_preset = -1
+anchor_left = -0.025
+anchor_top = 0.23
+anchor_right = 1.015
 anchor_bottom = 1.0
+offset_left = -13.5
+offset_top = 34.950012
+offset_right = -13.5
+offset_bottom = 34.950012
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.15, 0.12, 0.08, 1)
-
-[node name="FillBar" type="ColorRect" parent="MainVBox/AreaA_Top/OrderBar/OrderProgressBar"]
-layout_mode = 1
-anchors_preset = 9
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(0.95, 0.75, 0.2, 1)
-
-[node name="ProgressLabel" type="Label" parent="MainVBox/AreaA_Top/OrderBar/OrderProgressBar"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-text = "0/10"
-horizontal_alignment = 1
-vertical_alignment = 1
+texture = ExtResource("8_e8rlm")
+expand_mode = 1
 
 [node name="CatArea" type="Control" parent="MainVBox/AreaA_Top" unique_id=583700965]
 layout_mode = 1
@@ -183,19 +180,37 @@ anchors_preset = 14
 anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
-offset_left = -3.0
-offset_top = -246.0
-offset_right = -3.0
-offset_bottom = 54.0
+offset_left = 5.0
+offset_top = -198.0
+offset_right = 5.0
+offset_bottom = 102.0
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="catGrid" type="TextureRect" parent="MainVBox/AreaA_Top/CatArea" unique_id=723530329]
+layout_mode = 0
+offset_left = 1091.0
+offset_top = 9.0
+offset_right = 1391.0
+offset_bottom = 309.0
+texture = ExtResource("14_kxqg4")
+expand_mode = 1
+
+[node name="cat" type="TextureRect" parent="MainVBox/AreaA_Top/CatArea/catGrid" unique_id=1537189331]
+layout_mode = 0
+offset_left = -2.0
+offset_top = -4.0
+offset_right = 298.0
+offset_bottom = 296.0
+texture = ExtResource("10_21xg8")
+expand_mode = 1
 
 [node name="Control" type="Control" parent="MainVBox/AreaA_Top" unique_id=2098095197]
 anchors_preset = 0
 offset_left = 6.0
-offset_top = 699.0
+offset_top = 680.0
 offset_right = 306.0
-offset_bottom = 999.0
+offset_bottom = 980.0
 
 [node name="TextureRect" type="TextureRect" parent="MainVBox/AreaA_Top/Control" unique_id=2002583619]
 layout_mode = 1
@@ -255,8 +270,19 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="AreaB_Grid" type="Control" parent="MainVBox" unique_id=718818957]
-custom_minimum_size = Vector2(0, 1800)
+custom_minimum_size = Vector2(0, 1840)
 layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="MainVBox/AreaB_Grid" unique_id=2052776143]
+modulate = Color(0.8127041, 0.92232203, 0.8878327, 1)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("10_e8rlm")
+expand_mode = 1
 
 [node name="GridBoard" type="PanelContainer" parent="MainVBox/AreaB_Grid" unique_id=108032487]
 layout_mode = 1
@@ -269,6 +295,7 @@ offset_right = -10.0
 offset_bottom = -10.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_GridBoard")
 script = ExtResource("4_grid_board")
 
 [node name="GridContainer" type="GridContainer" parent="MainVBox/AreaB_Grid/GridBoard" unique_id=1019199615]
@@ -539,6 +566,7 @@ layout_mode = 2
 size_flags_vertical = 3
 
 [node name="AreaC_Bottom" type="Control" parent="MainVBox" unique_id=391821582]
+custom_minimum_size = Vector2(0, 300)
 layout_mode = 2
 
 [node name="Background" type="ColorRect" parent="MainVBox/AreaC_Bottom" unique_id=1935573584]
@@ -548,34 +576,56 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.25, 0.2, 0.35, 1)
+color = Color(0.8532024, 0.9514962, 0.85301816, 1)
 
 [node name="BottomPanel" type="Control" parent="MainVBox/AreaC_Bottom" unique_id=2108442162]
-anchors_preset = 0
-offset_left = 50.0
-offset_top = 50.0
-offset_right = -50.0
-offset_bottom = -50.0
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 
-[node name="ButtonContainer" type="HBoxContainer" parent="MainVBox/AreaC_Bottom/BottomPanel" unique_id=1102053023]
-layout_mode = 0
-theme_override_constants/separation = 16
-alignment = 1
+[node name="TextureRect" type="TextureRect" parent="MainVBox/AreaC_Bottom/BottomPanel" unique_id=1888918728]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 1.0
+offset_right = -1139.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("7_w22tq")
+expand_mode = 1
 
-[node name="GeneratorButton" type="ColorRect" parent="MainVBox/AreaC_Bottom/BottomPanel/ButtonContainer" unique_id=456258645]
-custom_minimum_size = Vector2(80, 80)
-layout_mode = 2
-color = Color(0.6, 0.3, 0.8, 1)
+[node name="TextureRect2" type="TextureRect" parent="MainVBox/AreaC_Bottom/BottomPanel" unique_id=1400585811]
+modulate = Color(0.97174364, 0.96559364, 0.8888899, 1)
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 298.0
+offset_top = 23.0
+offset_right = -294.0
+offset_bottom = -55.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_pynjx")
+expand_mode = 1
 
-[node name="ItemInfoPanel" type="ColorRect" parent="MainVBox/AreaC_Bottom/BottomPanel/ButtonContainer" unique_id=1442837103]
-custom_minimum_size = Vector2(200, 80)
-layout_mode = 2
-color = Color(0.5, 0.5, 0.5, 1)
-
-[node name="AutoMergeToggle" type="ColorRect" parent="MainVBox/AreaC_Bottom/BottomPanel/ButtonContainer" unique_id=2053980844]
-custom_minimum_size = Vector2(60, 60)
-layout_mode = 2
-color = Color(0.85, 0.2, 0.3, 1)
+[node name="TextureRect3" type="TextureRect" parent="MainVBox/AreaC_Bottom/BottomPanel" unique_id=553609609]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 1183.0
+offset_top = 27.0
+offset_right = -39.0
+offset_bottom = -51.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("14_kxqg4")
+expand_mode = 1
 
 [node name="OrderSystem" type="Node" parent="." unique_id=78142972]
 script = ExtResource("6_order_system")

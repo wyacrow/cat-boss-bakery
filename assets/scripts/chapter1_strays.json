@@ -1,0 +1,153 @@
+{
+  "title": "第一章·街角的伙伴",
+  "characters": {
+    "boss_cat": {
+      "name": "猫老板",
+      "portrait": "res://sprites/cat-boss.png"
+    },
+    "player": {
+      "name": "你",
+      "portrait": "res://sprites/me.png"
+    }
+  },
+  "lines": [
+    {
+      "character_id": "boss_cat",
+      "position": "left",
+      "text": "三份订单全部搞定！你上手也太快了吧——",
+      "sfx": ""
+    },
+    {
+      "character_id": "boss_cat",
+      "position": "left",
+      "text": "我就说我眼光不会错的。喏，这是你的第一笔奖金。",
+      "sfx": ""
+    },
+    {
+      "character_id": "",
+      "position": "center",
+      "text": "猫老板把一小袋金币推到你面前，眼睛弯成两道月牙。",
+      "sfx": ""
+    },
+    {
+      "character_id": "player",
+      "position": "right",
+      "text": "谢谢……不过说实话，我也就是照着做，没什么大不了的。",
+      "sfx": ""
+    },
+    {
+      "character_id": "boss_cat",
+      "position": "left",
+      "text": "别小看自己。能把事情稳稳当当做好，本身就是本事。",
+      "sfx": ""
+    },
+    {
+      "character_id": "boss_cat",
+      "position": "left",
+      "text": "对了——你刚才来的路上，有没有注意到街上那些猫？",
+      "sfx": ""
+    },
+    {
+      "character_id": "player",
+      "position": "right",
+      "text": "有……巷子里、垃圾桶旁边，好几只。它们也是流浪猫吗？",
+      "sfx": ""
+    },
+    {
+      "character_id": "boss_cat",
+      "position": "left",
+      "text": "嗯。其实我以前也是。",
+      "sfx": ""
+    },
+    {
+      "character_id": "boss_cat",
+      "position": "left",
+      "text": "被上一个主人丢掉的时候，我以为这辈子就那样了。",
+      "sfx": ""
+    },
+    {
+      "character_id": "boss_cat",
+      "position": "left",
+      "text": "后来碰到一个好心的面包师收留了我，才有了这个店。",
+      "sfx": ""
+    },
+    {
+      "character_id": "boss_cat",
+      "position": "left",
+      "text": "所以啊——这街上每一只流浪猫，都不是懒，是遇到坎了。",
+      "sfx": ""
+    },
+    {
+      "character_id": "boss_cat",
+      "position": "left",
+      "text": "跟你一样，也在等一个能重新开始的机会。",
+      "sfx": ""
+    },
+    {
+      "character_id": "player",
+      "position": "right",
+      "text": "……所以你是想说，我们可以帮它们？",
+      "sfx": ""
+    },
+    {
+      "character_id": "boss_cat",
+      "position": "left",
+      "text": "对！店里要是多几个伙伴，你也不用一个人扛着。",
+      "sfx": ""
+    },
+    {
+      "character_id": "boss_cat",
+      "position": "left",
+      "text": "而且每只猫都有自己擅长的事——",
+      "sfx": ""
+    },
+    {
+      "character_id": "boss_cat",
+      "position": "left",
+      "text": "有的猫手快，合成的时候能帮你省下一步；",
+      "sfx": ""
+    },
+    {
+      "character_id": "boss_cat",
+      "position": "left",
+      "text": "有的猫嗅觉灵，能让你更容易找到想要的原料；",
+      "sfx": ""
+    },
+    {
+      "character_id": "boss_cat",
+      "position": "left",
+      "text": "还有的对数字敏感，订单交上去金币能多拿几成。",
+      "sfx": ""
+    },
+    {
+      "character_id": "player",
+      "position": "right",
+      "text": "原来不是员工，是各有所长的伙伴啊。",
+      "sfx": ""
+    },
+    {
+      "character_id": "boss_cat",
+      "position": "left",
+      "text": "就是这个意思！所以——愿不愿意出去走走，找找它们？",
+      "sfx": ""
+    },
+    {
+      "character_id": "boss_cat",
+      "position": "left",
+      "text": "你看谁顺眼，就带回来。这店的门，对认真过日子的人永远开着。",
+      "sfx": ""
+    },
+    {
+      "character_id": "player",
+      "position": "right",
+      "text": "好。我这就去街上看看。",
+      "sfx": ""
+    },
+    {
+      "character_id": "",
+      "position": "center",
+      "text": "猫老板点了点头，把店门的钥匙多打了一把，放在你手里。",
+      "sfx": ""
+    }
+  ]
+}

@@ -10,17 +10,19 @@ extends RefCounted
 #   customer_cat   — 顾客猫类型（"tabby" | "black" | "white" 等）
 
 var id: String = ""
+var level_id: String = ""
 var requirements: Dictionary = {}
 var base_reward: int = 0
 var customer_cat: String = ""
 
 
-func _init(p_id: String = "", p_req: Dictionary = {}, p_reward: int = 0, p_cat: String = "") -> void:
+func _init(p_id: String = "", p_req: Dictionary = {}, p_reward: int = 0, p_cat: String = "", p_level_id: String = "") -> void:
 	id = p_id
+	level_id = p_level_id
 	requirements = p_req
 	base_reward = p_reward
 	customer_cat = p_cat
 
 
 func _to_string() -> String:
-	return "OrderData(%s, req=%s, reward=%d, cat=%s)" % [id, requirements, base_reward, customer_cat]
+	return "OrderData(%s, level=%s, req=%s, reward=%d, cat=%s)" % [id, level_id, requirements, base_reward, customer_cat]

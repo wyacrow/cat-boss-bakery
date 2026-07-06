@@ -27,6 +27,7 @@ signal move_request(from_pos: Vector2i, to_pos: Vector2i)
 # ── 公开数据 ──────────────────────────────────────────────
 
 @export var is_generator: bool = false
+@export var generator_type: String = ""   # "drink" | "bread" | ""（非生成器为空）
 
 var cell_position: Vector2i = Vector2i.ZERO
 var item: Item = null
@@ -87,8 +88,22 @@ func _ready() -> void:
 func _setup_generator_visual() -> void:
 	# 生成器格视觉：棋盘格背景保持可见，叠加专属生成器图标
 	if _generator_icon:
-		_generator_icon.texture = preload("res://sprites/art/咖啡机.png")
+		match generator_type:
+			"drink":
+				_generator_icon.texture = preload("res://sprites/art/咖啡机.png")
+			"bread":
+				_generator_icon.texture = preload("res://sprites/art/烘焙机.png")
+			_:
+				_generator_icon.texture = preload("res://sprites/art/咖啡机.png")  # 默认
 		_generator_icon.visible = true
+		# 素材图像占比小，以中心为锚点放大 1.2 倍（延迟设置 pivot 确保布局完成）
+		_generator_icon.scale = Vector2(1.2, 1.2)
+		call_deferred("_center_generator_pivot")
+
+
+func _center_generator_pivot() -> void:
+	if _generator_icon and _generator_icon.size.x > 0:
+		_generator_icon.pivot_offset = _generator_icon.size / 2.0
 
 
 func _setup_animations() -> void:
@@ -182,6 +197,7 @@ func _start_dragging() -> void:
 	if _item_icon:
 		_item_icon.visible = false
 
+	AudioManager.play_sfx("item_pickup_paw")
 	force_drag(_make_drag_data(), make_drag_preview())
 
 
@@ -264,6 +280,7 @@ func _do_merge(_source_item: Item, _source_button: ItemCellButton, from_pos: Vec
 
 func _do_move_to_empty(_source_item: Item, _source_button: ItemCellButton, from_pos: Vector2i) -> void:
 	# 数据操作 + 选中 + 动画 交由 GridBoard 处理
+	AudioManager.play_sfx("item_drop_paw")
 	move_request.emit(from_pos, cell_position)
 
 
@@ -290,6 +307,7 @@ func _finish_drag() -> void:
 
 	if _drag_result == "same" or _drag_result == "cancelled":
 		_restore_icon()
+		AudioManager.play_sfx("invalid_merge_meow")
 
 	match _drag_result:
 		"same", "cancelled":
@@ -424,8 +442,8 @@ func _reset_after_consume() -> void:
 # ============================================================
 
 func _play_press_sfx() -> void:
-	pass
+	AudioManager.play_sfx("ui_button_tap_soft")
 
 
 func _play_release_sfx() -> void:
-	pass
+	AudioManager.play_sfx("item_drop_paw")

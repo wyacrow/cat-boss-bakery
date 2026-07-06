@@ -8,11 +8,11 @@ content_margin_left = 48.0
 content_margin_top = 18.0
 content_margin_right = 48.0
 content_margin_bottom = 18.0
-color = Color(0.08, 0.08, 0.12, 0.92)
-corner_radius_top_left = 12
-corner_radius_top_right = 12
-corner_radius_bottom_right = 12
-corner_radius_bottom_left = 12
+color = Color(0.98, 0.96, 0.92, 0.95)
+corner_radius_top_left = 54
+corner_radius_top_right = 54
+corner_radius_bottom_right = 54
+corner_radius_bottom_left = 54
 
 [node name="DialoguePlayer" type="CanvasLayer" unique_id=1371225162]
 layer = 10
@@ -103,7 +103,7 @@ size_flags_stretch_ratio = 0.75
 
 [node name="NameLabel" type="Label" parent="Root/BottomArea/HBox/Center" unique_id=2143367576]
 layout_mode = 2
-color = Color(1, 1, 1, 1)
+color = Color(0.2, 0.18, 0.15, 1)
 theme_override_font_sizes/font_size = 64
 
 [node name="Panel" type="PanelContainer" parent="Root/BottomArea/HBox/Center" unique_id=1028262543]
@@ -113,7 +113,7 @@ theme_override_styles/panel = SubResource("StyleBox_dialog")
 
 [node name="DialogText" type="Label" parent="Root/BottomArea/HBox/Center/Panel" unique_id=912228341]
 layout_mode = 2
-color = Color(1, 1, 1, 1)
+color = Color(0.2, 0.18, 0.15, 1)
 theme_override_font_sizes/font_size = 64
 autowrap_mode = 3
 

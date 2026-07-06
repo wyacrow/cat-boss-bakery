@@ -1,0 +1,193 @@
+{
+  "files": [
+    {
+      "path": "assets/sounds/ui/ui_button_tap_soft.wav",
+      "priority": "P0",
+      "volume": "0.75",
+      "trigger": "点击普通按钮、订单按钮",
+      "desc": "柔和木质按钮声，不抢猫咪反馈"
+    },
+    {
+      "path": "assets/sounds/ui/ui_toast_notice.wav",
+      "priority": "P0",
+      "volume": "0.75",
+      "trigger": "轻提示出现",
+      "desc": "可爱短提示音"
+    },
+    {
+      "path": "assets/sounds/board/item_pickup_paw.wav",
+      "priority": "P0",
+      "volume": "0.75",
+      "trigger": "拾起棋盘物品",
+      "desc": "猫爪轻点的拾起感"
+    },
+    {
+      "path": "assets/sounds/board/item_drop_paw.wav",
+      "priority": "P0",
+      "volume": "0.75",
+      "trigger": "物品落入格子",
+      "desc": "柔软放下音"
+    },
+    {
+      "path": "assets/sounds/board/invalid_merge_meow.wav",
+      "priority": "P0",
+      "volume": "0.85",
+      "trigger": "不可合成、拖拽失败、材料不足",
+      "desc": "疑惑但不刺耳的短喵"
+    },
+    {
+      "path": "assets/sounds/board/board_full_meow.wav",
+      "priority": "P0",
+      "volume": "0.85",
+      "trigger": "棋盘满时点击生成器",
+      "desc": "两声低提示喵"
+    },
+    {
+      "path": "assets/sounds/board/item_delete_puff.wav",
+      "priority": "P1",
+      "volume": "0.75",
+      "trigger": "删除普通物品",
+      "desc": "轻微消散反馈"
+    },
+    {
+      "path": "assets/sounds/generator/bakery_basket_tap_rustle.wav",
+      "priority": "P0",
+      "volume": "0.9",
+      "trigger": "点击面包篮生成器",
+      "desc": "面包篮/布料/面粉袋轻晃声，尾音完整"
+    },
+    {
+      "path": "assets/sounds/generator/bakery_item_spawn_plop.wav",
+      "priority": "P0",
+      "volume": "0.85",
+      "trigger": "面包类产物出现",
+      "desc": "松软面团弹出落下"
+    },
+    {
+      "path": "assets/sounds/generator/coffee_machine_tap_steam.wav",
+      "priority": "P0",
+      "volume": "0.88",
+      "trigger": "点击咖啡机生成器",
+      "desc": "按钮+稳定短蒸汽，不卡断"
+    },
+    {
+      "path": "assets/sounds/generator/coffee_item_spawn_pour.wav",
+      "priority": "P0",
+      "volume": "0.85",
+      "trigger": "咖啡类产物出现",
+      "desc": "咖啡倒入杯中并收尾"
+    },
+    {
+      "path": "assets/sounds/generator/coffee_bean_clink.wav",
+      "priority": "P1",
+      "volume": "0.75",
+      "trigger": "产出咖啡豆时可叠加",
+      "desc": "咖啡豆轻碰撞声"
+    },
+    {
+      "path": "assets/sounds/generator/oven_ding_bright.wav",
+      "priority": "P1",
+      "volume": "0.8",
+      "trigger": "生成高等级面包或冷却结束",
+      "desc": "明亮烤箱叮声"
+    },
+    {
+      "path": "assets/sounds/merge/merge_success_lv2_3.wav",
+      "priority": "P0",
+      "volume": "0.85",
+      "trigger": "合成结果等级 Lv.2-Lv.3",
+      "desc": "低级合成，轻快但不突然中断"
+    },
+    {
+      "path": "assets/sounds/merge/merge_success_lv4_5.wav",
+      "priority": "P1",
+      "volume": "0.9",
+      "trigger": "合成结果等级 Lv.4-Lv.5",
+      "desc": "中高级合成，明亮升级感"
+    },
+    {
+      "path": "assets/sounds/merge/merge_success_lv6_meow.wav",
+      "priority": "P1",
+      "volume": "0.95",
+      "trigger": "合成结果等级 Lv.6",
+      "desc": "最高级合成，带开心喵尾音"
+    },
+    {
+      "path": "assets/sounds/order/order_ready_meow.wav",
+      "priority": "P1",
+      "volume": "0.75",
+      "trigger": "订单满足需求变为可提交",
+      "desc": "可提交提示小喵"
+    },
+    {
+      "path": "assets/sounds/order/order_complete_quick_meow.wav",
+      "priority": "P0",
+      "volume": "0.9",
+      "trigger": "完成快速订单",
+      "desc": "短欢快喵+轻金币"
+    },
+    {
+      "path": "assets/sounds/order/order_complete_normal_meow.wav",
+      "priority": "P0",
+      "volume": "0.92",
+      "trigger": "完成普通订单",
+      "desc": "双声欢快喵，适合常用订单"
+    },
+    {
+      "path": "assets/sounds/order/order_complete_big_meow.wav",
+      "priority": "P1",
+      "volume": "0.95",
+      "trigger": "完成高价值订单",
+      "desc": "庆祝型开心喵，带完整收尾"
+    },
+    {
+      "path": "assets/sounds/order/order_refresh_soft.wav",
+      "priority": "P0",
+      "volume": "0.72",
+      "trigger": "订单刷新",
+      "desc": "新订单出现提示"
+    },
+    {
+      "path": "assets/sounds/resource/coin_gain.wav",
+      "priority": "P0",
+      "volume": "0.85",
+      "trigger": "金币增加",
+      "desc": "清脆但柔和的金币声"
+    },
+    {
+      "path": "assets/sounds/resource/exp_gain_twinkle.wav",
+      "priority": "P0",
+      "volume": "0.8",
+      "trigger": "经验或星星增加",
+      "desc": "星星闪烁声"
+    },
+    {
+      "path": "assets/sounds/resource/reward_pop.wav",
+      "priority": "P1",
+      "volume": "0.75",
+      "trigger": "奖励飘字弹出",
+      "desc": "奖励数字弹出声"
+    },
+    {
+      "path": "assets/sounds/cat/cat_unlock_happy.wav",
+      "priority": "P2",
+      "volume": "0.9",
+      "trigger": "获得猫咪员工",
+      "desc": "猫咪解锁开心声"
+    },
+    {
+      "path": "assets/sounds/cat/cat_purr_short_loop.wav",
+      "priority": "P2",
+      "volume": "0.35",
+      "trigger": "猫咪界面或猫咪停留",
+      "desc": "短呼噜底音"
+    },
+    {
+      "path": "assets/sounds/ambient/bakery_cat_room_loop.wav",
+      "priority": "P2",
+      "volume": "0.22",
+      "trigger": "局内低音量循环",
+      "desc": "温暖面包店环境底噪"
+    }
+  ]
+}

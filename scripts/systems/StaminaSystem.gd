@@ -1,7 +1,7 @@
 class_name StaminaSystem
 extends Node
 # StaminaSystem — 体力系统
-# 最大体力 20，每 30 秒自动恢复 1 点。
+# 最大体力 50，每 30 秒自动恢复 1 点。
 # 猫咪 buff 可通过 regen_multiplier 修改恢复速度（工程猫 = 1.25 → 24s 恢复 1 点）。
 #
 # 对外接口：
@@ -10,7 +10,7 @@ extends Node
 #   set_regen_multiplier(m)  设置恢复倍率（由 CatSystem 调用）
 #   get_stamina() -> int     查询当前体力
 
-@export var max_stamina: int = 20
+@export var max_stamina: int = 50
 @export var regen_interval: float = 30.0   # 基础恢复间隔（秒/点）
 
 var current_stamina: int = 20

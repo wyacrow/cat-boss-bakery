@@ -1,0 +1,45 @@
+# 《猫老板的面包店》猫咪主题 Demo 音效包 v3
+
+本版本针对上一版“播放到一半中断”的问题做了统一优化：所有短音效都保留了完整尾音和淡出，订单喵声更完整，生成器产出音更贴近面包/咖啡的真实产出感。
+
+## 放置方式
+
+解压后，将 `assets/sounds/` 整个目录复制到项目资源目录。
+
+## 程序接入建议
+
+- 不要在动画结束前强行 stop 当前 SFX，尽量让订单喵声自然播完。
+- 同一事件如果同时播放订单完成和金币声，建议先播放订单完成音，再延迟 0.12 秒播放金币声；本包部分订单音已经内置轻金币声，可只播订单音。
+- P0 文件优先接入，P1/P2 可按时间补充。
+
+## 完整清单
+
+| 路径 | 优先级 | 建议音量 | 触发时机 | 说明 |
+|---|---|---:|---|---|
+| `assets/sounds/ui/ui_button_tap_soft.wav` | P0 | 0.75 | 点击普通按钮、订单按钮 | 柔和木质按钮声，不抢猫咪反馈 |
+| `assets/sounds/ui/ui_toast_notice.wav` | P0 | 0.75 | 轻提示出现 | 可爱短提示音 |
+| `assets/sounds/board/item_pickup_paw.wav` | P0 | 0.75 | 拾起棋盘物品 | 猫爪轻点的拾起感 |
+| `assets/sounds/board/item_drop_paw.wav` | P0 | 0.75 | 物品落入格子 | 柔软放下音 |
+| `assets/sounds/board/invalid_merge_meow.wav` | P0 | 0.85 | 不可合成、拖拽失败、材料不足 | 疑惑但不刺耳的短喵 |
+| `assets/sounds/board/board_full_meow.wav` | P0 | 0.85 | 棋盘满时点击生成器 | 两声低提示喵 |
+| `assets/sounds/board/item_delete_puff.wav` | P1 | 0.75 | 删除普通物品 | 轻微消散反馈 |
+| `assets/sounds/generator/bakery_basket_tap_rustle.wav` | P0 | 0.9 | 点击面包篮生成器 | 面包篮/布料/面粉袋轻晃声，尾音完整 |
+| `assets/sounds/generator/bakery_item_spawn_plop.wav` | P0 | 0.85 | 面包类产物出现 | 松软面团弹出落下 |
+| `assets/sounds/generator/coffee_machine_tap_steam.wav` | P0 | 0.88 | 点击咖啡机生成器 | 按钮+稳定短蒸汽，不卡断 |
+| `assets/sounds/generator/coffee_item_spawn_pour.wav` | P0 | 0.85 | 咖啡类产物出现 | 咖啡倒入杯中并收尾 |
+| `assets/sounds/generator/coffee_bean_clink.wav` | P1 | 0.75 | 产出咖啡豆时可叠加 | 咖啡豆轻碰撞声 |
+| `assets/sounds/generator/oven_ding_bright.wav` | P1 | 0.8 | 生成高等级面包或冷却结束 | 明亮烤箱叮声 |
+| `assets/sounds/merge/merge_success_lv2_3.wav` | P0 | 0.85 | 合成结果等级 Lv.2-Lv.3 | 低级合成，轻快但不突然中断 |
+| `assets/sounds/merge/merge_success_lv4_5.wav` | P1 | 0.9 | 合成结果等级 Lv.4-Lv.5 | 中高级合成，明亮升级感 |
+| `assets/sounds/merge/merge_success_lv6_meow.wav` | P1 | 0.95 | 合成结果等级 Lv.6 | 最高级合成，带开心喵尾音 |
+| `assets/sounds/order/order_ready_meow.wav` | P1 | 0.75 | 订单满足需求变为可提交 | 可提交提示小喵 |
+| `assets/sounds/order/order_complete_quick_meow.wav` | P0 | 0.9 | 完成快速订单 | 短欢快喵+轻金币 |
+| `assets/sounds/order/order_complete_normal_meow.wav` | P0 | 0.92 | 完成普通订单 | 双声欢快喵，适合常用订单 |
+| `assets/sounds/order/order_complete_big_meow.wav` | P1 | 0.95 | 完成高价值订单 | 庆祝型开心喵，带完整收尾 |
+| `assets/sounds/order/order_refresh_soft.wav` | P0 | 0.72 | 订单刷新 | 新订单出现提示 |
+| `assets/sounds/resource/coin_gain.wav` | P0 | 0.85 | 金币增加 | 清脆但柔和的金币声 |
+| `assets/sounds/resource/exp_gain_twinkle.wav` | P0 | 0.8 | 经验或星星增加 | 星星闪烁声 |
+| `assets/sounds/resource/reward_pop.wav` | P1 | 0.75 | 奖励飘字弹出 | 奖励数字弹出声 |
+| `assets/sounds/cat/cat_unlock_happy.wav` | P2 | 0.9 | 获得猫咪员工 | 猫咪解锁开心声 |
+| `assets/sounds/cat/cat_purr_short_loop.wav` | P2 | 0.35 | 猫咪界面或猫咪停留 | 短呼噜底音 |
+| `assets/sounds/ambient/bakery_cat_room_loop.wav` | P2 | 0.22 | 局内低音量循环 | 温暖面包店环境底噪 |

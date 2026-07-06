@@ -51,5 +51,5 @@ func get_gold() -> int:
 func _on_order_completed(_order_id: String, reward_gold: int) -> void:
 	add_gold(reward_gold)
 	orders_completed += 1
-	EventBus.order_progress_changed.emit(orders_completed, max_orders_target)
+	# 不再自行 emit order_progress_changed，由 OrderSystem 统一管理进度 emit
 	print("GameStat: order completed, progress=%d/%d" % [orders_completed, max_orders_target])

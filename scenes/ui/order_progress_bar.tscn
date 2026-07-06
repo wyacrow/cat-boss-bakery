@@ -1,0 +1,41 @@
+[gd_scene format=3 uid="uid://b20nmlfsaii4t"]
+
+[ext_resource type="Script" uid="uid://bw5g4i7c2a7xc" path="res://scripts/ui/components/order_progress_bar.gd" id="1_script"]
+
+[node name="OrderProgressBar" type="Control" unique_id=836521740]
+custom_minimum_size = Vector2(260, 36)
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_script")
+
+[node name="BgRect" type="ColorRect" parent="." unique_id=1836492017]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.15, 0.12, 0.08, 1)
+
+[node name="FillBar" type="ColorRect" parent="." unique_id=1158072943]
+layout_mode = 1
+anchors_preset = 9
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.95, 0.75, 0.2, 1)
+
+[node name="ProgressLabel" type="Label" parent="." unique_id=1539842761]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "0/10"
+horizontal_alignment = 1
+vertical_alignment = 1

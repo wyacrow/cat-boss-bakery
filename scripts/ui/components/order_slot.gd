@@ -226,6 +226,7 @@ func _on_gui_input(event: InputEvent) -> void:
 	if is_empty:
 		return
 	play_shake_animation()
+	AudioManager.play_sfx("order_ready_meow")
 	_submit()
 
 

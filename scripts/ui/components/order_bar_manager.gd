@@ -18,8 +18,8 @@ const ResourceDB := preload("res://scripts/data/ResourceDB.gd")
 
 ## 2 个槽位的锚定位置（相对于 OrderBar 的 offset）
 @export var slot_positions: Array[Vector2] = [
-	Vector2(20, 236),
-	Vector2(590, 236),
+	Vector2(20, 246),
+	Vector2(555, 246),
 ]
 ## 动画参数
 @export var appear_duration: float = 0.2
@@ -137,3 +137,5 @@ func _find_slot_index(order_id: String) -> int:
 func _on_slot_removed(slot: OrderSlot) -> void:
 	if is_instance_valid(slot):
 		slot.queue_free()
+	# 通知 OrderSystem：槽位已释放，可以补入下一个订单
+	EventBus.order_slot_freed.emit()

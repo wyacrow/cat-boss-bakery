@@ -60,10 +60,10 @@ const CUSTOMER_CAT_TEXTURES := {
 
 const ITEM_TEXTURES := {
 	# ── 面包链 ──────────────────────────────────────────────
-	"bread_1": "res://sprites/food.png",     # 面粉
-	"bread_2": "res://sprites/food.png",     # 面团
-	"bread_3": "res://sprites/food.png",     # 面包
-	"bread_4": "res://sprites/food.png",     # 高级面包
+	"bread_1": "res://sprites/bread/resized-bread1.png",     # 面粉
+	"bread_2": "res://sprites/bread/resized-bread2.png",     # 面团
+	"bread_3": "res://sprites/bread/resized-bread3.png",     # 面包
+	"bread_4": "res://sprites/bread/resized-bread4.png",     # 高级面包
 
 	# ── 甜点链 ──────────────────────────────────────────────
 	"dessert_1": "res://sprites/cake.png",   # 奶油

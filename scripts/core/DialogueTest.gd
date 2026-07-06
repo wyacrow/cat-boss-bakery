@@ -23,6 +23,6 @@ func _play_dialogue() -> void:
 	# 运行时查找 autoload，避免编译期依赖
 	var player := get_node_or_null("/root/DialoguePlayer")
 	if player and player.has_method("play"):
-		player.play("res://assets/scripts/cat_demo.json")
+		player.play("res://assets/scripts/chapter1_strays.json")
 	else:
 		push_error("DialogueTest: DialoguePlayer autoload not found!")

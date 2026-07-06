@@ -43,6 +43,7 @@ var _is_transitioning: bool = false
 @onready var _name_label: Label = $Root/BottomArea/HBox/Center/NameLabel
 @onready var _dialog_text: Label = $Root/BottomArea/HBox/Center/Panel/DialogText
 @onready var _click_area: Control = $Root/ClickArea
+@onready var _panel: PanelContainer = $Root/BottomArea/HBox/Center/Panel
 
 
 # ============================================================
@@ -52,6 +53,16 @@ var _is_transitioning: bool = false
 func _ready() -> void:
 	_click_area.gui_input.connect(_on_gui_input)
 	visible = false
+
+	# 运行时主题：米白色对话框背景 + 深色文字
+	var sb := _panel.get_theme_stylebox("panel").duplicate() as StyleBoxFlat
+	if sb:
+		sb.bg_color = Color(0.98, 0.96, 0.92, 0.95)
+		_panel.add_theme_stylebox_override("panel", sb)
+	_name_label.add_theme_color_override("font_color", Color(1, 0.95, 0.85, 1))
+
+	_dialog_text.add_theme_color_override("font_color", Color(0.2, 0.18, 0.15, 1))
+
 	print("DialoguePlayer: autoload initialized")
 
 

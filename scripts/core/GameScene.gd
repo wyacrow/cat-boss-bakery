@@ -9,6 +9,7 @@ const StaminaSystem := preload("res://scripts/systems/StaminaSystem.gd")
 const BoardSkillSystemCls := preload("res://scripts/skills/BoardSkillSystem.gd")
 const BoardSkillCls := preload("res://scripts/skills/BoardSkill.gd")
 const ResourceDB := preload("res://scripts/data/ResourceDB.gd")
+const LevelConfig := preload("res://scripts/data/LevelConfig.gd")
 
 # === 统一配置变量 ===
 @export var cell_button_size: Vector2 = Vector2(80, 80):
@@ -20,19 +21,29 @@ const ResourceDB := preload("res://scripts/data/ResourceDB.gd")
 var _skill_system: Node = null
 var _last_displayed_gold: int = 0
 
+# ── 剧情标记 ──────────────────────────────────────────────
+var _chapter1_played: bool = false
+
+# ── 猫咪技能入口 ──────────────────────────────────────────
+var _cat_click_count: int = 0
+var _cat_last_click_time: float = 0.0
+const CAT_PATIENCE_SEC: float = 1.0
+const CAT_FURIOUS_CLICKS: int = 5
+
 func _ready() -> void:
 	if Engine.is_editor_hint():
 		return
 
 	randomize()  # 初始化随机种子，确保每次运行结果不同
 	print("GameScene loaded - wiring systems...")
-	AudioManager.play_bgm("bakery_cat_room_loop")
+	AudioManager.play_bgm("backGroundBG")
 	_apply_cell_button_size()
 	_wire_stamina_and_generator()
 	_wire_order_system()
 	_wire_effects_system()
 	_wire_hud()
 	_setup_skill_system()
+	_setup_dialogue_flow()
 
 
 # ── HUD 绑定 ──────────────────────────────────────────────
@@ -107,6 +118,8 @@ func _wire_order_system() -> void:
 	order_bar.set_script(manager_script)
 	order_bar.setup(order_sys)
 	print("GameScene: OrderBarManager setup complete")
+	# 加载第一关订单
+	order_sys.load_level(LevelConfig.get_first_level_id())
 
 # OrderProgressBar 已直接在场景中，通过自身 _ready() 从 GameStat 自初始化
 
@@ -175,73 +188,163 @@ func _setup_skill_system() -> void:
 	)
 	_skill_system.register_skill(throw_skill)
 	print("GameScene: BoardSkillSystem initialized, 'shuffle' + 'clear' + 'throw' registered")
+	_setup_cat_button()
 
-	# 在 CatArea 中创建一排测试按钮
-	_create_skill_buttons()
-
-
-func _create_skill_buttons() -> void:
-	var cat_area := get_node_or_null("MainVBox/AreaA_Top/CatArea")
-	if not cat_area:
+func _setup_cat_button() -> void:
+	var cat_grid := get_node_or_null("MainVBox/AreaA_Top/CatArea/catGrid")
+	if not cat_grid:
 		return
 
-	# 隐藏原有的 TextureButton
-	var old_btn := cat_area.get_node_or_null("TextureButton")
-	if old_btn:
-		old_btn.visible = false
-
-	# 创建水平容器
-	var hbox := HBoxContainer.new()
-	hbox.name = "SkillButtons"
-	hbox.alignment = BoxContainer.ALIGNMENT_CENTER
-	hbox.add_theme_constant_override("separation", 16)
-	hbox.anchor_right = 1.0
-	hbox.anchor_bottom = 1.0
-	cat_area.add_child(hbox)
-
-	# 定义按钮列表：{text, skill_id, color}
-	var buttons := [
-		{"text": "洗牌", "skill": "shuffle", "color": Color(0.3, 0.6, 0.9, 1.0)},
-		{"text": "爆破", "skill": "clear",  "color": Color(0.9, 0.3, 0.3, 1.0)},
-		{"text": "投掷", "skill": "throw",  "color": Color(0.3, 0.8, 0.4, 1.0)},
-		{"text": "震动", "skill": "",      "color": Color(0.6, 0.5, 0.2, 1.0)},
-	]
-
-	for cfg in buttons:
-		var btn := Button.new()
-		btn.text = cfg["text"]
-		btn.custom_minimum_size = Vector2(120, 60)
-
-		# 按钮样式
-		var style := StyleBoxFlat.new()
-		style.bg_color = cfg["color"]
-		style.corner_radius_top_left = 12
-		style.corner_radius_top_right = 12
-		style.corner_radius_bottom_left = 12
-		style.corner_radius_bottom_right = 12
-		btn.add_theme_stylebox_override("normal", style)
-
-		# 文字样式
-		btn.add_theme_color_override("font_color", Color.WHITE)
-		btn.add_theme_font_size_override("font_size", 22)
-
-		var skill_id: String = cfg["skill"]
-		if skill_id.is_empty():
-			btn.pressed.connect(_on_shake_only_pressed)
-		else:
-			btn.pressed.connect(_on_skill_btn_pressed.bind(skill_id))
-
-		hbox.add_child(btn)
-
-	print("GameScene: 4 skill test buttons created")
+	# 透明按钮作为 catGrid 子节点，自动跟随 catGrid 位置和大小
+	var btn := Button.new()
+	btn.name = "CatSkillButton"
+	btn.flat = true
+	btn.anchors_preset = 15
+	btn.anchor_right = 1.0
+	btn.anchor_bottom = 1.0
+	var empty := StyleBoxEmpty.new()
+	btn.add_theme_stylebox_override("normal", empty)
+	btn.add_theme_stylebox_override("hover", empty)
+	btn.add_theme_stylebox_override("pressed", empty)
+	btn.add_theme_stylebox_override("focus", empty)
+	btn.pressed.connect(_on_cat_skill_pressed)
+	cat_grid.add_child(btn)
+	print("GameScene: CatSkillButton setup complete")
 
 
-func _on_skill_btn_pressed(skill_id: String) -> void:
+func _on_cat_skill_pressed() -> void:
+	var now := Time.get_ticks_msec() / 1000.0
+	if now - _cat_last_click_time > CAT_PATIENCE_SEC:
+		_cat_click_count = 0
+
+	_cat_click_count += 1
+	_cat_last_click_time = now
+
+	var skill_id := _roll_cat_skill()
+	print("GameScene: CatSkill click #%d -> %s" % [_cat_click_count, skill_id])
+
+	# 先播放按钮动画，再执行技能
+	_play_cat_button_animation(skill_id)
 	_skill_system.use_skill(skill_id)
 
 
-func _on_shake_only_pressed() -> void:
-	_skill_system.shake_board(0.50, 22.0)
+# ── 猫咪按钮技能动画 ──────────────────────────────────────
+
+## 根据技能类型播放不同的按钮动画
+func _play_cat_button_animation(skill_id: String) -> void:
+	match skill_id:
+		"throw":
+			_animate_cat_vibrate()
+		"shuffle":
+			_animate_cat_sway()
+		"clear":
+			_animate_cat_explode()
+		_:
+			return
+
+
+## 投掷 — 震荡动画：快速上下振动，模拟投掷反冲
+func _animate_cat_vibrate() -> void:
+	var cat := _get_cat_node()
+	if not cat:
+		return
+
+	var original_pos: Vector2 = cat.position
+	var amplitude := 8.0
+	var duration := 0.35
+	var steps := 8
+	var step_dur := duration / steps
+
+	var t := create_tween()
+	for i in range(steps):
+		var decay := 1.0 - float(i) / steps
+		var offset_y := amplitude * decay * (1.0 if i % 2 == 0 else -1.0)
+		t.tween_property(cat, "position:y", original_pos.y + offset_y, step_dur) \
+			.set_trans(Tween.TRANS_LINEAR)
+	# 归位
+	t.tween_property(cat, "position", original_pos, step_dur * 0.5) \
+		.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+
+
+## 打乱 — 左右摇晃动画：像摇骰子一样左右摆动，逐渐衰减
+func _animate_cat_sway() -> void:
+	var cat := _get_cat_node()
+	if not cat:
+		return
+
+	var original_pos: Vector2 = cat.position
+	var amplitude := 18.0
+	var duration := 0.55
+	var steps := 6
+	var step_dur := duration / steps
+
+	var t := create_tween()
+	for i in range(steps):
+		var decay := 1.0 - float(i) / steps
+		var sway_dir := 1.0 if i % 2 == 0 else -1.0
+		t.tween_property(cat, "position:x", original_pos.x + sway_dir * amplitude * decay, step_dur) \
+			.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN_OUT)
+	# 归位
+	t.tween_property(cat, "position", original_pos, step_dur * 0.5) \
+		.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+
+
+## 爆炸 — 上下左右 + 震荡混乱动画：全方向随机抖动，表现爆发混乱
+func _animate_cat_explode() -> void:
+	var cat := _get_cat_node()
+	if not cat:
+		return
+
+	var original_pos: Vector2 = cat.position
+	var amplitude := 20.0
+	var duration := 0.7
+	var steps := 12
+	var step_dur := duration / steps
+
+	# 预生成随机方向（上下左右 + 对角线），确保视觉混乱
+	var dirs: Array[Vector2] = []
+	for _i in range(steps):
+		dirs.append(Vector2(
+			randf_range(-1.0, 1.0),
+			randf_range(-1.0, 1.0)
+		).normalized())
+
+	var t := create_tween()
+	for i in range(steps):
+		var decay := 1.0 - float(i) / steps
+		var offset := dirs[i] * amplitude * decay
+		t.tween_property(cat, "position", original_pos + offset, step_dur) \
+			.set_trans(Tween.TRANS_LINEAR)
+	# 归位
+	t.tween_property(cat, "position", original_pos, step_dur * 0.4) \
+		.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+
+
+## 获取 catGrid 下的 cat TextureRect 节点
+func _get_cat_node() -> Control:
+	var cat_grid := get_node_or_null("MainVBox/AreaA_Top/CatArea/catGrid")
+	if cat_grid:
+		return cat_grid.get_node_or_null("cat") as Control
+	return null
+
+
+func _roll_cat_skill() -> String:
+	if _cat_click_count >= CAT_FURIOUS_CLICKS:
+		_cat_click_count = 0
+		return "clear"
+
+	var t := float(_cat_click_count - 1)
+	var throw_p := maxf(0.20, 0.80 - t * 0.15)
+	var clear_p := 0.02 + t * 0.04
+	var shuffle_p := 1.0 - throw_p - clear_p
+
+	var roll := randf()
+	if roll < clear_p:
+		return "clear"
+	elif roll < clear_p + shuffle_p:
+		return "shuffle"
+	return "throw"
+
 
 
 ## 洗牌技能执行体
@@ -350,3 +453,28 @@ func _execute_throw(system: BoardSkillSystemCls, board: GridBoard) -> Array[Vect
 	system.animate_throw(target, item)
 
 	return [target]
+
+func _setup_dialogue_flow() -> void:
+	# 序章：游戏启动后延迟 0.5s 播放
+	await get_tree().create_timer(0.5).timeout
+	var dp := get_node_or_null("/root/DialoguePlayer")
+	if dp and dp.has_method("play"):
+		dp.play("res://assets/scripts/prologue_street.json")
+		print("GameScene: prologue dialogue triggered")
+
+	# 监听第一关完成 → 播放第一章剧情
+	if not EventBus.level_completed.is_connected(_on_level_completed):
+		EventBus.level_completed.connect(_on_level_completed)
+	print("GameScene: dialogue flow ready")
+
+func _on_level_completed(level_id: String) -> void:
+	if level_id != "level_01" or _chapter1_played:
+		return
+	_chapter1_played = true
+
+	# 关卡完成后稍等半秒再弹剧情
+	await get_tree().create_timer(0.5).timeout
+	var dp := get_node_or_null("/root/DialoguePlayer")
+	if dp and dp.has_method("play"):
+		dp.play("res://assets/scripts/chapter1_strays.json")
+		print("GameScene: chapter1 dialogue triggered")

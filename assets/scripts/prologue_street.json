@@ -1,0 +1,177 @@
+{
+  "title": "序章·猫老板的相遇",
+  "characters": {
+    "boss_cat": {
+      "name": "猫老板",
+      "portrait": "res://sprites/cat-boss.png"
+    },
+    "player": {
+      "name": "你",
+      "portrait": "res://sprites/me.png"
+    }
+  },
+  "lines": [
+    {
+      "character_id": "",
+      "position": "center",
+      "text": "夜色沉下来。你坐在便利店门口的台阶上，攥着那张捏皱的解雇通知单。",
+      "sfx": ""
+    },
+    {
+      "character_id": "player",
+      "position": "right",
+      "text": "说裁就裁了……今天房东把门锁也换了。卡里三百块，连今晚去哪都不知道。",
+      "sfx": ""
+    },
+    {
+      "character_id": "",
+      "position": "center",
+      "text": "一阵黄油香飘过来。街角开着一家小面包店，暖黄的灯光溢在路面上。",
+      "sfx": ""
+    },
+    {
+      "character_id": "",
+      "position": "center",
+      "text": "一只穿围裙的橘猫站在店门口，正歪着头看你。",
+      "sfx": ""
+    },
+    {
+      "character_id": "boss_cat",
+      "position": "left",
+      "text": "嗨，你在那儿坐了好久啦。外面凉，进来喝杯热的？",
+      "sfx": ""
+    },
+    {
+      "character_id": "player",
+      "position": "right",
+      "text": "……我没钱，不用了。",
+      "sfx": ""
+    },
+    {
+      "character_id": "boss_cat",
+      "position": "left",
+      "text": "没说收你钱呀。来，刚烤的牛角面包，还有热可可。暖和暖和。",
+      "sfx": ""
+    },
+    {
+      "character_id": "",
+      "position": "center",
+      "text": "店里都是小麦和焦糖的味道，角落里窝着一只打盹的大橘猫。你鼻子一酸。",
+      "sfx": ""
+    },
+    {
+      "character_id": "boss_cat",
+      "position": "left",
+      "text": "跟我说说吧——怎么一个人坐在这儿？",
+      "sfx": ""
+    },
+    {
+      "character_id": "player",
+      "position": "right",
+      "text": "被公司裁了，说我不够好……觉得什么都做不成。",
+      "sfx": ""
+    },
+    {
+      "character_id": "boss_cat",
+      "position": "left",
+      "text": "那种滋味我懂。不过面团要揉好久才能发起来呀。",
+      "sfx": ""
+    },
+    {
+      "character_id": "boss_cat",
+      "position": "left",
+      "text": "之前的地方没让你发起来，是它的烤炉不对，不是你不对。",
+      "sfx": ""
+    },
+    {
+      "character_id": "boss_cat",
+      "position": "left",
+      "text": "诶——我这儿正缺个帮手。二楼有个小房间，管吃管住。来试试？",
+      "sfx": ""
+    },
+    {
+      "character_id": "player",
+      "position": "right",
+      "text": "可我从来没做过面包……我行吗？",
+      "sfx": ""
+    },
+    {
+      "character_id": "boss_cat",
+      "position": "left",
+      "text": "行！来，我先带你看看这店是怎么转起来的——",
+      "sfx": ""
+    },
+    {
+      "character_id": "boss_cat",
+      "position": "left",
+      "text": "这是咱们的工作台。面包、甜品、饮品，都从这一张台子上出来。",
+      "sfx": ""
+    },
+    {
+      "character_id": "boss_cat",
+      "position": "left",
+      "text": "点一下工作台，花一点体力，它就会吐出一份基础原料。",
+      "sfx": ""
+    },
+    {
+      "character_id": "boss_cat",
+      "position": "left",
+      "text": "然后呀——两个一模一样的东西，拖到一起，就合成一个更高级的。",
+      "sfx": ""
+    },
+    {
+      "character_id": "boss_cat",
+      "position": "left",
+      "text": "比如两个生面团合成一个面包，两个面包合成一个吐司。简单吧？",
+      "sfx": ""
+    },
+    {
+      "character_id": "boss_cat",
+      "position": "left",
+      "text": "合成出来的成品别闲着——看上面，顾客们下了订单。",
+      "sfx": ""
+    },
+    {
+      "character_id": "boss_cat",
+      "position": "left",
+      "text": "把对应的东西交上去就能赚金币。金币多了，店就能越开越好！",
+      "sfx": ""
+    },
+    {
+      "character_id": "player",
+      "position": "right",
+      "text": "生成原料、合成升级、交订单……还挺有条理的。",
+      "sfx": ""
+    },
+    {
+      "character_id": "boss_cat",
+      "position": "left",
+      "text": "对吧？哦对了——那个打盹的家伙是你前辈，也是只橘猫。",
+      "sfx": ""
+    },
+    {
+      "character_id": "boss_cat",
+      "position": "left",
+      "text": "别看它懒洋洋的，店里的老员工了。有不懂的，问它就行。",
+      "sfx": ""
+    },
+    {
+      "character_id": "boss_cat",
+      "position": "left",
+      "text": "好啦——不如直接上手试试？围裙给你。",
+      "sfx": ""
+    },
+    {
+      "character_id": "boss_cat",
+      "position": "left",
+      "text": "咱们先从最简单的开始——来做一杯饮品怎么样？",
+      "sfx": ""
+    },
+    {
+      "character_id": "",
+      "position": "center",
+      "text": "猫老板递来一条围裙，上面绣着一只小猫爪印。厨房的灯亮了。",
+      "sfx": ""
+    }
+  ]
+}
