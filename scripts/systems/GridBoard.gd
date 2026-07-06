@@ -12,6 +12,7 @@ var grid_rows: int = 0
 var grid_data: Array = []          # Array[Array] of Item|null
 var _cells: Array = []             # flat ItemCellButton refs
 var _merge_system: MergeSystem
+var _order_system: Node = null
 var _generators: Dictionary = {}   # String -> GeneratorSystem（key 为 generator_type）
 var _stamina: Node = null
 
@@ -45,6 +46,25 @@ func set_stamina_system(node: Node) -> void:
 func set_effects_system(effects: EffectsSystem) -> void:
 	for cell in _cells:
 		cell.set_effects_system(effects)
+
+
+## 场景组装时注入订单系统引用，用于 CheckIcon 刷新
+func set_order_system(node: Node) -> void:
+	_order_system = node
+	_connect_check_signals()
+	# 延迟刷新，等待 OrderSystem 加载完第一关的订单数据
+	call_deferred("_refresh_check_icons")
+
+
+func _connect_check_signals() -> void:
+	if not EventBus.grid_changed.is_connected(_on_check_grid_changed):
+		EventBus.grid_changed.connect(_on_check_grid_changed)
+	if not EventBus.order_generated.is_connected(_on_check_order_generated):
+		EventBus.order_generated.connect(_on_check_order_generated)
+	if not EventBus.order_completed.is_connected(_on_check_order_completed):
+		EventBus.order_completed.connect(_on_check_order_completed)
+	if not EventBus.level_loaded.is_connected(_on_check_level_loaded):
+		EventBus.level_loaded.connect(_on_check_level_loaded)
 
 
 func _init_grid_data() -> void:
@@ -455,3 +475,52 @@ func _remove_from_grid(key: String, needed: int) -> Array[Vector2i]:
 					cell.play_consume_animation()
 				removed += 1
 	return cleared
+
+
+# ═══════════════════════════════════════════════════════════════
+#  CheckIcon 刷新
+# ═══════════════════════════════════════════════════════════════
+
+func _on_check_grid_changed(_positions: Array) -> void:
+	_refresh_check_icons()
+
+
+func _on_check_order_generated(_order) -> void:
+	_refresh_check_icons()
+
+
+func _on_check_order_completed(_order_id: String, _reward: int) -> void:
+	_refresh_check_icons()
+
+
+func _on_check_level_loaded(_level_id: String, _total: int) -> void:
+	_refresh_check_icons()
+
+
+## 遍历所有 cell：格内有物品且 {type}_{level} 出现在任意活跃订单需求中 → 显示 CheckIcon
+func _refresh_check_icons() -> void:
+	if _order_system == null:
+		return
+
+	# 收集当前活跃订单（屏幕中 2 个）的所有需求 key → Set
+	var required_keys: Dictionary = {}
+	var orders: Array = _order_system.get_orders()
+	for order in orders:
+		if order == null:
+			continue
+		for key: String in order.requirements:
+			required_keys[key] = true
+
+	# 遍历所有 cell，决定显示/隐藏
+	# 注意：不能直接用 cell.item，因为消耗动画期间 cell.item 尚未清空
+	# 必须以 grid_data（数据权威源）为准
+	for cell in _cells:
+		if cell.is_generator:
+			cell.set_check_visible(false)
+			continue
+		var it: Item = get_item_at(cell.cell_position)
+		if it == null:
+			cell.set_check_visible(false)
+			continue
+		var item_key: String = it.type + "_" + str(it.level)
+		cell.set_check_visible(required_keys.has(item_key))

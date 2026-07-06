@@ -58,6 +58,7 @@ var _selection_frame: TextureRect
 var _drag_overlay: ColorRect
 var _item_icon: TextureRect
 var _generator_icon: TextureRect = null
+var _check_icon: TextureRect = null
 var _effects: EffectsSystem = null
 
 
@@ -70,6 +71,7 @@ func _ready() -> void:
 	_drag_overlay   = get_node_or_null("DragOverlay")
 	_item_icon       = get_node_or_null("ItemIcon")
 	_generator_icon  = get_node_or_null("GeneratorIcon")
+	_check_icon      = get_node_or_null("CheckIcon")
 
 	# 确保视觉覆盖层不拦截鼠标事件
 	if _selection_frame:
@@ -134,6 +136,8 @@ func _init_visual_state() -> void:
 		_selection_frame.visible = false
 	if _drag_overlay:
 		_drag_overlay.visible = false
+	if _check_icon:
+		_check_icon.visible = false
 
 
 func set_effects_system(effects: EffectsSystem) -> void:
@@ -447,3 +451,13 @@ func _play_press_sfx() -> void:
 
 func _play_release_sfx() -> void:
 	AudioManager.play_sfx("item_drop_paw")
+
+
+# ============================================================
+#  CheckIcon
+# ============================================================
+
+## 控制对钩图标可见性：当格内物品满足当前订单需求时显示
+func set_check_visible(p_show: bool) -> void:
+	if _check_icon:
+		_check_icon.visible = p_show

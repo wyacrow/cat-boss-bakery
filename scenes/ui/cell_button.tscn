@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://dw1xfuslxs4kn" path="res://scripts/ui/components/item_cell_button.gd" id="1_script"]
 [ext_resource type="Texture2D" uid="uid://dm22fbuu8i27l" path="res://sprites/art/棋盘格.png" id="2_p7qgs"]
 [ext_resource type="Texture2D" uid="uid://b066i4uqq8sc1" path="res://sprites/art/选中方框.png" id="3_h4ew6"]
+[ext_resource type="Texture2D" uid="uid://cgy542unwytnu" path="res://sprites/art/对钩.png" id="3_x3g6s"]
 
 [node name="CellButton" type="Button" unique_id=116191647]
 custom_minimum_size = Vector2(195, 195)
@@ -30,7 +31,7 @@ grow_vertical = 2
 pivot_offset = Vector2(42.5, 42.5)
 expand_mode = 1
 
-[node name="GeneratorIcon" type="TextureRect" parent="." unique_id=3344882918]
+[node name="GeneratorIcon" type="TextureRect" parent="." unique_id=-950084378]
 visible = false
 layout_mode = 1
 anchors_preset = 8
@@ -44,11 +45,23 @@ offset_right = 75.0
 offset_bottom = 75.0
 grow_horizontal = 2
 grow_vertical = 2
-mouse_filter = 1
+expand_mode = 1
+
+[node name="CheckIcon" type="TextureRect" parent="." unique_id=596666439]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -16.5
+offset_top = -14.5
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("3_x3g6s")
 expand_mode = 1
 
 [node name="SelectionFrame" type="TextureRect" parent="." unique_id=578862209]
-self_modulate = Color(1, 1, 1, 1)
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0

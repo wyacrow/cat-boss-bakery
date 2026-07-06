@@ -19,7 +19,8 @@
       "Bash(ls -la .godot/editor/*GameScene*)",
       "Bash(ls -la scenes/GameScene.tscn*)",
       "mcp__godot__run_project",
-      "mcp__godot__get_debug_output"
+      "mcp__godot__get_debug_output",
+      "Bash(git commit *)"
     ],
     "additionalDirectories": [
       "d:\\Godot\\test\\scripts"

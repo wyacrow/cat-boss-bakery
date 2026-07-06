@@ -110,7 +110,8 @@ func _wire_order_system() -> void:
 	var order_sys := $OrderSystem
 	var grid := $MainVBox/AreaB_Grid/GridBoard
 	order_sys.set_grid_board(grid)
-	print("GameScene: GridBoard injected into OrderSystem")
+	grid.set_order_system(order_sys)
+	print("GameScene: GridBoard <-> OrderSystem wired")
 
 	# 注入 OrderSystem 到 OrderBar + 动态挂载 OrderBarManager 脚本
 	var order_bar := $MainVBox/AreaA_Top/OrderBar

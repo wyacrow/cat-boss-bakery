@@ -217,7 +217,7 @@ func _play_coin_burst(from_pos: Vector2, to_pos: Vector2, count: int) -> void:
 	if not coin_tex:
 		coin_tex = WHITE_TEX
 
-	var coin_size := 56.0
+	var coin_size := 112.0
 	var stagger_per_coin := 0.05   # 每枚金币的出发间隔
 	var suck_duration := 0.65      # 单枚金币冲向目标的时间
 
